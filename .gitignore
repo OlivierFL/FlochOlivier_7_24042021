@@ -9,3 +9,15 @@
 /vendor/
 ###< symfony/framework-bundle ###
 /.idea
+.php_cs.cache
+
+###> phpunit/phpunit ###
+/phpunit.xml
+phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+###< symfony/phpunit-bridge ###
+/codeclimate-master/

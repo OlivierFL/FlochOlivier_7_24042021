@@ -11,12 +11,12 @@ class UserController extends AbstractController
     #[Route(
         '/users',
         name: 'users_list',
-        methods: ['GET', 'POST']
+        methods: ['GET']
     )]
-    public function users(): Response
+    public function getUsers(): Response
     {
         return $this->json([
-            'message' => 'Welcome to your new controller!',
+            'message' => 'Get Users list',
         ]);
     }
 
@@ -24,12 +24,37 @@ class UserController extends AbstractController
         '/users/{id}',
         name: 'user_detail',
         requirements: ['id' => '\d+'],
-        methods: ['GET', 'DELETE']
+        methods: ['GET']
     )]
-    public function user(): Response
+    public function getUser(): Response
     {
         return $this->json([
-            'message' => 'Welcome to your new controller!',
+            'message' => 'Get User details',
+        ]);
+    }
+
+    #[Route(
+        '/users',
+        name: 'user_create',
+        methods: ['POST']
+    )]
+    public function createUser(): Response
+    {
+        return $this->json([
+            'message' => 'Create new User',
+        ]);
+    }
+
+    #[Route(
+        '/users/{id}',
+        name: 'user_delete',
+        requirements: ['id' => '\d+'],
+        methods: ['DELETE']
+    )]
+    public function deleteUser(): Response
+    {
+        return $this->json([
+            'message' => 'Delete user',
         ]);
     }
 }

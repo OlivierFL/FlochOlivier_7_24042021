@@ -13,11 +13,10 @@ class ProductController extends AbstractController
         name: 'products_list',
         methods: ['GET']
     )]
-    public function products(): Response
+    public function getProducts(): Response
     {
         return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ProductController.php',
+            'message' => 'Get products list',
         ]);
     }
 
@@ -27,11 +26,10 @@ class ProductController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: ['GET']
     )]
-    public function product(): Response
+    public function getProduct(): Response
     {
         return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ProductController.php',
+            'message' => 'Get Product detail',
         ]);
     }
 }

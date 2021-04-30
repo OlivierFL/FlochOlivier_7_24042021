@@ -26,7 +26,7 @@ class ProductController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: ['GET']
     )]
-    public function getProduct(): Response
+    public function getOneProduct(): Response
     {
         return $this->json([
             'message' => 'Get Product detail',

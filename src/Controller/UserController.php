@@ -26,7 +26,7 @@ class UserController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: ['GET']
     )]
-    public function getUser(): Response
+    public function getOneUser(): Response
     {
         return $this->json([
             'message' => 'Get User details',

@@ -17,6 +17,18 @@
     "composer/xdebug-handler": {
         "version": "2.0.0"
     },
+    "dama/doctrine-test-bundle": {
+        "version": "4.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "4.0",
+            "ref": "56eaa387b5e48ebcc7c95a893b47dfa1ad51449c"
+        },
+        "files": [
+            "config/packages/test/dama_doctrine_test_bundle.yaml"
+        ]
+    },
     "dnoegel/php-xdg-base-dir": {
         "version": "v0.1.1"
     },
@@ -180,6 +192,12 @@
             "tests/bootstrap.php"
         ]
     },
+    "psalm/plugin-phpunit": {
+        "version": "0.15.1"
+    },
+    "psalm/plugin-symfony": {
+        "version": "v2.2.4"
+    },
     "psr/cache": {
         "version": "2.0.0"
     },
@@ -239,6 +257,18 @@
     },
     "sebastian/version": {
         "version": "3.0.2"
+    },
+    "sensio/framework-extra-bundle": {
+        "version": "5.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.2",
+            "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
+        },
+        "files": [
+            "config/packages/sensio_framework_extra.yaml"
+        ]
     },
     "stof/doctrine-extensions-bundle": {
         "version": "1.2",

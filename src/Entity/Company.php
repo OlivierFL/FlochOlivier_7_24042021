@@ -6,14 +6,15 @@ use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
-//use Gedmo\Timestampable\Traits\TimestampableEntity;
+
 /**
  * @ORM\Entity(repositoryClass=CompanyRepository::class)
  */
 class Company implements UserInterface
 {
-//    use TimestampableEntity;
+    use TimestampableEntity;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

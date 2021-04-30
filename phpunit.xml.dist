@@ -7,6 +7,11 @@
          colors="true"
          bootstrap="tests/bootstrap.php"
 >
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
     <php>
         <ini name="error_reporting" value="-1"/>
         <server name="APP_ENV" value="test" force="true"/>
@@ -19,18 +24,13 @@
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
-        </whitelist>
-    </filter>
-
     <!-- Run `composer require symfony/phpunit-bridge` before enabling this extension -->
-    <!--
     <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
     </listeners>
-    -->
+    <extensions>
+        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
+    </extensions>
 
     <!-- Run `composer require symfony/panther` before enabling this extension -->
     <!--

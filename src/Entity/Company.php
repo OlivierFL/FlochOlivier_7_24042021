@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class Company implements UserInterface
 {
     use TimestampableEntity;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -109,7 +110,7 @@ class Company implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return $this->password;
     }
 
     public function setPassword(string $password): self
@@ -183,11 +184,9 @@ class Company implements UserInterface
 
     public function removeUser(User $user): self
     {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getCompany() === $this) {
-                $user->setCompany(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->users->removeElement($user) && $user->getCompany() === $this) {
+            $user->setCompany(null);
         }
 
         return $this;

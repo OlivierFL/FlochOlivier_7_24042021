@@ -14,6 +14,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 class Brand
 {
     use TimestampableEntity;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -107,11 +108,9 @@ class Brand
 
     public function removeProduct(Product $product): self
     {
-        if ($this->products->removeElement($product)) {
-            // set the owning side to null (unless already changed)
-            if ($product->getBrand() === $this) {
-                $product->setBrand(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->products->removeElement($product) && $product->getBrand() === $this) {
+            $product->setBrand(null);
         }
 
         return $this;

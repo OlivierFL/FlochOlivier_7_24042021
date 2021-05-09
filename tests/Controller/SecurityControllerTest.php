@@ -3,6 +3,7 @@
 namespace Test\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class SecurityControllerTest extends WebTestCase
 {
@@ -13,8 +14,9 @@ class SecurityControllerTest extends WebTestCase
             'POST',
             '/register',
             [
-                'username' => 'CompanyName',
+                'name' => 'CompanyName',
                 'password' => 'CompanyPassword',
+                'logoAltText' => 'Alt text',
             ],
         );
 
@@ -29,7 +31,7 @@ class SecurityControllerTest extends WebTestCase
             'POST',
             '/register',
             [
-                'username' => '',
+                'name' => '',
                 'password' => 'CompanyPassword',
             ],
         );
@@ -45,11 +47,36 @@ class SecurityControllerTest extends WebTestCase
             'POST',
             '/register',
             [
-                'username' => 'CompanyName',
+                'name' => 'CompanyName',
                 'password' => null,
             ],
         );
 
-        self::assertResponseStatusCodeSame(500, 'An error is thrown when a company registers with an empty password');
+        self::assertResponseStatusCodeSame(400, 'An error is thrown when a company registers with an empty password');
+    }
+
+    public function testRegisterNewCompanyWithLogoFile(): void
+    {
+        static::markTestSkipped('Handle file uploads');
+        $client = static::createClient();
+
+        $filePath = '/home/olivier/projets/php/bilemo/tests/files/test.png';
+        $uploadedFile = new UploadedFile($filePath, 'test.png');
+
+        $client->request(
+            'POST',
+            '/register',
+            [
+                'name' => 'CompanyName',
+                'password' => 'CompanyPassword',
+                'logoAltText' => 'Alt text',
+            ],
+            [
+                'logo' => $uploadedFile,
+            ]
+        );
+
+        self::assertResponseStatusCodeSame(201, 'New company can be created with a logo file');
+        self::isJson();
     }
 }

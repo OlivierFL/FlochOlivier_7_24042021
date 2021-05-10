@@ -12,7 +12,7 @@ class SecurityControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request(
             'POST',
-            '/register',
+            '/api/register',
             [
                 'name' => 'CompanyName',
                 'password' => 'CompanyPassword1234',
@@ -29,7 +29,7 @@ class SecurityControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request(
             'POST',
-            '/register',
+            '/api/register',
             [
                 'name' => '',
                 'password' => 'CompanyPassword1234',
@@ -46,7 +46,7 @@ class SecurityControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request(
             'POST',
-            '/register',
+            '/api/register',
             [
                 'name' => 'CompanyName',
                 'password' => null,
@@ -62,7 +62,7 @@ class SecurityControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request(
             'POST',
-            '/register',
+            '/api/register',
             [
                 'name' => 'CompanyName',
                 'password' => 'toto',
@@ -83,7 +83,7 @@ class SecurityControllerTest extends WebTestCase
 
         $client->request(
             'POST',
-            '/register',
+            '/api/register',
             [
                 'name' => 'CompanyName',
                 'password' => 'CompanyPassword',

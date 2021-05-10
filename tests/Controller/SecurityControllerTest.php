@@ -15,7 +15,7 @@ class SecurityControllerTest extends WebTestCase
             '/register',
             [
                 'name' => 'CompanyName',
-                'password' => 'CompanyPassword',
+                'password' => 'CompanyPassword1234',
                 'logoAltText' => 'Alt text',
             ],
         );
@@ -32,7 +32,8 @@ class SecurityControllerTest extends WebTestCase
             '/register',
             [
                 'name' => '',
-                'password' => 'CompanyPassword',
+                'password' => 'CompanyPassword1234',
+                'logoAltText' => 'Alt text',
             ],
         );
 
@@ -49,10 +50,27 @@ class SecurityControllerTest extends WebTestCase
             [
                 'name' => 'CompanyName',
                 'password' => null,
+                'logoAltText' => 'Alt text',
             ],
         );
 
         self::assertResponseStatusCodeSame(400, 'An error is thrown when a company registers with an empty password');
+    }
+
+    public function testRegisterNewCompanyWithTooWeakPassword(): void
+    {
+        $client = static::createClient();
+        $client->request(
+            'POST',
+            '/register',
+            [
+                'name' => 'CompanyName',
+                'password' => 'toto',
+                'logoAltText' => 'CompanyAltText',
+            ],
+        );
+
+        self::assertResponseStatusCodeSame(400, 'An error is thrown when a company registers with a too weak password');
     }
 
     public function testRegisterNewCompanyWithLogoFile(): void

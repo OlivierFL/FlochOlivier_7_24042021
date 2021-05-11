@@ -51,7 +51,7 @@ class Company implements UserInterface
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    #[Assert\Url]
+    #[Assert\NotBlank]
     private $logoUrl;
 
     /**

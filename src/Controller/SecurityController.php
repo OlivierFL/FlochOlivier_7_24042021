@@ -28,11 +28,8 @@ class SecurityController extends AbstractController
      * @throws Exception
      */
     #[Route('register', name: 'api_register')]
-    public function register(Request $request): Response
+    public function register(Company $company): Response
     {
-        /** @var Company $company */
-        $company = $request->get('company');
-
         $errors = $this->validator->validate($company);
         if (\count($errors) > 0) {
             return $this->json($errors, Response::HTTP_BAD_REQUEST);

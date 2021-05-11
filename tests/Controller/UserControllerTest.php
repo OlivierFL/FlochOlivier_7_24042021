@@ -9,7 +9,7 @@ class UserControllerTest extends WebTestCase
     public function testGetUsersList(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/users');
+        $client->request('GET', '/api/users');
 
         self::assertResponseIsSuccessful();
         self::isJson();
@@ -18,7 +18,7 @@ class UserControllerTest extends WebTestCase
     public function testGetUserDetails(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/users/1');
+        $client->request('GET', '/api/users/1');
 
         self::assertResponseIsSuccessful();
         self::isJson();
@@ -27,7 +27,7 @@ class UserControllerTest extends WebTestCase
     public function testCreateNewUser(): void
     {
         $client = static::createClient();
-        $client->request('POST', '/users');
+        $client->request('POST', '/api/users');
 
         self::assertResponseIsSuccessful();
         self::isJson();
@@ -36,7 +36,7 @@ class UserControllerTest extends WebTestCase
     public function testDeleteUser(): void
     {
         $client = static::createClient();
-        $client->request('DELETE', '/users/1');
+        $client->request('DELETE', '/api/users/1');
 
         self::assertResponseIsSuccessful();
         self::isJson();

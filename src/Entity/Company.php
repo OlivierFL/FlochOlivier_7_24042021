@@ -7,10 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Rollerworks\Component\PasswordStrength\Validator\Constraints as RollerworksPassword;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CompanyRepository::class)
+ * @UniqueEntity("name")
  */
 class Company implements UserInterface
 {
@@ -26,6 +30,7 @@ class Company implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
+    #[Assert\NotBlank]
     private $name;
 
     /**
@@ -36,17 +41,23 @@ class Company implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @RollerworksPassword\PasswordStrength(minLength=6, minStrength=3)
+     * @RollerworksPassword\PasswordRequirements(requireNumbers=true, requireCaseDiff=true)
      */
+    #[Assert\NotBlank]
+    #[Assert\NotCompromisedPassword]
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    #[Assert\Url]
     private $logoUrl;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Assert\NotBlank]
     private $logoAltText;
 
     /**
@@ -69,7 +80,7 @@ class Company implements UserInterface
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -157,7 +168,7 @@ class Company implements UserInterface
         return $this->logoAltText;
     }
 
-    public function setLogoAltText(string $logoAltText): self
+    public function setLogoAltText(?string $logoAltText): self
     {
         $this->logoAltText = $logoAltText;
 

@@ -3,12 +3,14 @@
 namespace App\DataFixtures;
 
 use App\Entity\Brand;
+use App\Entity\Company;
 use App\Entity\Product;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
 use Faker\Factory;
 use Faker\Generator;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
@@ -21,7 +23,12 @@ class AppFixtures extends Fixture
      */
     private array $brands = [];
 
-    public function __construct()
+    /**
+     * AppFixtures constructor.
+     *
+     * @param UserPasswordEncoderInterface $encoder
+     */
+    public function __construct(private UserPasswordEncoderInterface $encoder)
     {
         $this->faker = Factory::create('fr');
     }
@@ -33,10 +40,25 @@ class AppFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
+        $this->loadCompany($manager);
         $this->loadBrands($manager);
         $this->loadProducts($manager);
 
         $manager->flush();
+    }
+
+    /**
+     * @param ObjectManager $manager
+     */
+    private function loadCompany(ObjectManager $manager): void
+    {
+        $company = new Company();
+        $company->setName('CompanyTest');
+        $company->setPassword($this->encoder->encodePassword($company, 'Test1234'));
+        $company->setLogoUrl('apple.png');
+        $company->setLogoAltText($company->getName());
+
+        $manager->persist($company);
     }
 
     /**
@@ -65,7 +87,7 @@ class AppFixtures extends Fixture
      */
     private function loadBrands(ObjectManager $manager): void
     {
-        for ($i = 0; $i < 50; ++$i) {
+        for ($i = 0; $i < 10; ++$i) {
             $brand = new Brand();
             $brand->setName($this->faker->company());
             $brand->setLogoUrl('apple.png');

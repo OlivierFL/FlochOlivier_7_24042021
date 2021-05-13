@@ -142,6 +142,12 @@
     "gedmo/doctrine-extensions": {
         "version": "v3.0.5"
     },
+    "knplabs/knp-components": {
+        "version": "v3.0.2"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.4.2"
+    },
     "laminas/laminas-code": {
         "version": "4.2.1"
     },
@@ -581,6 +587,9 @@
     },
     "theseer/tokenizer": {
         "version": "1.2.0"
+    },
+    "twig/twig": {
+        "version": "v3.3.1"
     },
     "vimeo/psalm": {
         "version": "4.7.1"

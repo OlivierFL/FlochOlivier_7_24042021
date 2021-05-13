@@ -15,6 +15,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.8",
         "fakerphp/faker": "^1.14",
+        "knplabs/knp-paginator-bundle": "^5.4",
         "lexik/jwt-authentication-bundle": "^2.11",
         "psalm/plugin-symfony": "^2.2",
         "rollerworks/password-strength-bundle": "^2.2",

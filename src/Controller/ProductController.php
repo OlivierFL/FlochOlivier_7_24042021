@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Repository\ProductRepository;
+use App\Service\ProductsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
@@ -20,18 +22,21 @@ class ProductController extends AbstractController
         name: 'products_list',
         methods: ['GET']
     )]
-    public function getProducts(ProductRepository $repository, SerializerInterface $serializer): Response
+    public function getProducts(Request $request, ProductRepository $repository, ProductsService $productsService, SerializerInterface $serializer): Response
     {
         $products = $repository->findAll();
+        $page = max(1, $request->query->getInt('page', 1));
 
-        $products = $serializer->normalize($products, null, [
+        $productsPaginated = $productsService->getProductsPaginated($products, $page);
+
+        $productsPaginated = $serializer->normalize($productsPaginated, null, [
             AbstractObjectNormalizer::ENABLE_MAX_DEPTH => true,
             'circular_reference_handler' => function ($object) {
                 return $object->getId();
             },
         ]);
 
-        return $this->json($products);
+        return $this->json($productsPaginated);
     }
 
     #[Route(

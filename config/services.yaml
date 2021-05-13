@@ -33,3 +33,7 @@ services:
     App\Service\FileUploader:
         arguments:
             $baseDirectory: '%uploads_directory%'
+
+    App\Service\ProductsService:
+        arguments:
+            $productsListLimit: '%env(PRODUCTS_LIST_LIMIT)%'

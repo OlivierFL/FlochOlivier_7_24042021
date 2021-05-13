@@ -8,13 +8,14 @@ use Knp\Component\Pager\PaginatorInterface;
 
 class ProductsService
 {
-    public function __construct(private PaginatorInterface $paginator, private string $productsListLimit)
+    public function __construct(private PaginatorInterface $paginator)
     {
     }
 
     /**
      * @param Product[] $products
      * @param int       $page
+     * @param int       $limit
      *
      * @return array
      */

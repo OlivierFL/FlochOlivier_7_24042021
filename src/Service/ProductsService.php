@@ -18,12 +18,12 @@ class ProductsService
      *
      * @return array
      */
-    public function getProductsPaginated(array $products, int $page): array
+    public function getProductsPaginated(array $products, int $page, int $limit): array
     {
         $productsPaginated = $this->paginator->paginate(
             $products,
             $page,
-            (int) $this->productsListLimit
+            $limit
         );
 
         return $this->formatResult($page, $productsPaginated, $products);

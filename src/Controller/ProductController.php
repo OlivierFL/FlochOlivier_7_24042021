@@ -26,8 +26,9 @@ class ProductController extends AbstractController
     {
         $products = $repository->findAll();
         $page = max(1, $request->query->getInt('page', 1));
+        $limit = $request->query->getInt('limit', 10);
 
-        $productsPaginated = $productsService->getProductsPaginated($products, $page);
+        $productsPaginated = $productsService->getProductsPaginated($products, $page, $limit);
 
         $productsPaginated = $serializer->normalize($productsPaginated, null, [
             AbstractObjectNormalizer::ENABLE_MAX_DEPTH => true,

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -10,27 +11,43 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\ConstraintViolationListNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SecurityController extends AbstractController
 {
+    /**
+     * @var Serializer
+     */
+    private Serializer $serializer;
+
     public function __construct(
         private UserPasswordEncoderInterface $encoder,
         private ValidatorInterface $validator,
         private EntityManagerInterface $em
     ) {
+        $this->serializer = new Serializer([new ConstraintViolationListNormalizer()]);
     }
 
     /**
      * @ParamConverter(converter="createentity", "company", class="App\Entity\Company")
      *
      * @throws Exception
+     * @throws ExceptionInterface
      */
     #[Route('register', name: 'api_register')]
-    public function register(Company $company): Response
+    public function register(Company $company, FileUploader $uploader): Response
     {
         $errors = $this->validator->validate($company);
         if (\count($errors) > 0) {
+            $errors = $this->serializer->normalize($errors);
+
+            if ($company->getLogoUrl()) {
+                $uploader->remove($company->getLogoUrl());
+            }
+
             return $this->json($errors, Response::HTTP_BAD_REQUEST);
         }
 

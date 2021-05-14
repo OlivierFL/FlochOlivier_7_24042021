@@ -31,6 +31,9 @@ class Company implements UserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      */
     #[Assert\NotBlank]
+    #[Assert\Length(
+        max: 255
+    )]
     private $name;
 
     /**
@@ -46,6 +49,9 @@ class Company implements UserInterface
      */
     #[Assert\NotBlank]
     #[Assert\NotCompromisedPassword]
+    #[Assert\Length(
+        max: 255
+    )]
     private $password;
 
     /**
@@ -58,6 +64,9 @@ class Company implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     #[Assert\NotBlank]
+    #[Assert\Length(
+        max: 255
+    )]
     private $logoAltText;
 
     /**

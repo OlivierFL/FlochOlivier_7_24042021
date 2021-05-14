@@ -12,23 +12,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Normalizer\ConstraintViolationListNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SecurityController extends AbstractController
 {
-    /**
-     * @var Serializer
-     */
-    private Serializer $serializer;
-
     public function __construct(
         private UserPasswordEncoderInterface $encoder,
         private ValidatorInterface $validator,
         private EntityManagerInterface $em
     ) {
-        $this->serializer = new Serializer([new ConstraintViolationListNormalizer()]);
     }
 
     /**
@@ -42,8 +34,6 @@ class SecurityController extends AbstractController
     {
         $errors = $this->validator->validate($company);
         if (\count($errors) > 0) {
-            $errors = $this->serializer->normalize($errors);
-
             if ($company->getLogoUrl()) {
                 $uploader->remove($company->getLogoUrl());
             }

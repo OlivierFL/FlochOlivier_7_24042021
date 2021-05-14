@@ -33,3 +33,10 @@ services:
     App\Service\FileUploader:
         arguments:
             $baseDirectory: '%uploads_directory%'
+
+    App\Request\GetEntityParamConverter:
+        tags:
+            - { name: 'request.param_converter', converter: 'getentity' }
+    App\Request\CreateEntityParamConverter:
+        tags:
+            - { name: 'request.param_converter', converter: 'createentity' }

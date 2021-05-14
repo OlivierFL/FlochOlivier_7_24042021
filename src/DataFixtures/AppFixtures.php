@@ -53,8 +53,8 @@ class AppFixtures extends Fixture
     private function loadCompany(ObjectManager $manager): void
     {
         $company = new Company();
-        $company->setName('CompanyTest');
-        $company->setPassword($this->encoder->encodePassword($company, 'Test1234'));
+        $company->setName('Company');
+        $company->setPassword($this->encoder->encodePassword($company, 'Company1234'));
         $company->setLogoUrl('apple.png');
         $company->setLogoAltText($company->getName());
 

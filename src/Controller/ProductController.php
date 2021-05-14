@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
 use App\Repository\ProductRepository;
 use App\Service\ProductsService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,6 +39,7 @@ class ProductController extends AbstractController
 
     /**
      * @throws ExceptionInterface
+     * @ParamConverter(converter="getentity", "product", class="App\Entity\Product")
      */
     #[Route(
         '/products/{id}',
@@ -44,14 +47,8 @@ class ProductController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: ['GET']
     )]
-    public function getOneProduct(int $id, ProductRepository $repository): Response
+    public function getOneProduct(Product $product): Response
     {
-        $product = $repository->findOneBy(['id' => $id]);
-
-        if (!$product) {
-            return $this->json(['Error' => 'Product not found'], 404);
-        }
-
         $product = $this->productsService->normalize($product);
 
         return $this->json($product);

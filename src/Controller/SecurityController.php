@@ -22,7 +22,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @ParamConverter("company", class="App\Entity\Company")
+     * @ParamConverter(converter="createentity", "company", class="App\Entity\Company")
      *
      * @throws Exception
      */

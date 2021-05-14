@@ -39,7 +39,7 @@ class ProductController extends AbstractController
 
     /**
      * @throws ExceptionInterface
-     * @ParamConverter(converter="getentity", "product", class="App\Entity\Product")
+     * @ParamConverter(converter="doctrine.orm", "product", class="App\Entity\Product")
      */
     #[Route(
         '/products/{id}',

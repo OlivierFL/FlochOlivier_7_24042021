@@ -29,7 +29,7 @@ class ProductController extends AbstractController
         $page = max(1, $request->query->getInt('page', 1));
         $limit = $request->query->getInt('limit', 10);
 
-        $productsPaginated = $pagination->getProductsPaginated($products, $page, $limit);
+        $productsPaginated = $pagination->paginateData($products, $page, $limit);
 
         return $this->json($productsPaginated);
     }

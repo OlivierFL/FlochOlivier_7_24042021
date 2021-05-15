@@ -22,7 +22,7 @@ class PaginationService
      *
      * @return array
      */
-    public function getProductsPaginated(array $data, int $page, int $limit): array
+    public function paginateData(array $data, int $page, int $limit): array
     {
         $dataPaginated = $this->paginator->paginate(
             $data,

@@ -68,13 +68,32 @@ class UserControllerTest extends WebTestCase
         self::isJson();
     }
 
-    public function testGetUsersList(): void
+    /**
+     * @throws JsonException
+     */
+    public function testGetUsersListAuthenticated(): void
     {
-        self::markTestSkipped('implement auth');
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/users');
+
+        self::assertResponseIsSuccessful('Users list is accessible when user is authenticated');
+        self::isJson();
+        $response = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertArrayHasKey('page', $response);
+        self::assertArrayHasKey('limit', $response);
+        self::assertArrayHasKey('total', $response);
+        self::assertArrayHasKey('data', $response);
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testGetUsersListNotAuthenticated(): void
+    {
         $client = static::createClient();
         $client->request('GET', '/api/users');
 
-        self::assertResponseIsSuccessful();
+        self::assertResponseStatusCodeSame(401, 'Users list is not accessible when company is not authenticated');
         self::isJson();
     }
 

@@ -5,12 +5,13 @@ namespace App\Request;
 use App\Service\FileUploader;
 use App\Service\JsonService;
 use JsonException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class ParamConverter implements ParamConverterInterface
+class CreateEntityParamConverter implements ParamConverterInterface
 {
     public function __construct(private SerializerInterface $serializer, private FileUploader $uploader, private JsonService $jsonService)
     {
@@ -21,7 +22,7 @@ class ParamConverter implements ParamConverterInterface
      *
      * @throws JsonException
      */
-    public function apply(Request $request, \Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $configuration): bool
+    public function apply(Request $request, ParamConverter $configuration): bool
     {
         $entity = $this->serializer->deserialize(
             $this->jsonService->toJson($request),
@@ -44,7 +45,7 @@ class ParamConverter implements ParamConverterInterface
     /**
      * {@inheritDoc}
      */
-    public function supports(\Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter $configuration): bool
+    public function supports(ParamConverter $configuration): bool
     {
         $entity = strtolower((str_replace('App\Entity\\', '', $configuration->getClass())));
 

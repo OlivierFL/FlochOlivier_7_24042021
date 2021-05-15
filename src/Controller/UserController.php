@@ -2,9 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Service\NormalizationService;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
@@ -33,16 +39,37 @@ class UserController extends AbstractController
         ]);
     }
 
+    /**
+     * @ParamConverter(converter="createentity", "user", class="App\Entity\User")
+     *
+     * @param User                   $user
+     * @param EntityManagerInterface $entityManager
+     * @param ValidatorInterface     $validator
+     * @param NormalizationService   $normalization
+     *
+     * @throws ExceptionInterface
+     * @return Response
+     */
     #[Route(
         '/users',
         name: 'user_create',
         methods: ['POST']
     )]
-    public function createUser(): Response
+    public function createUser(User $user, EntityManagerInterface $entityManager, ValidatorInterface $validator, NormalizationService $normalization): Response
     {
-        return $this->json([
-            'message' => 'Create new User',
-        ]);
+        $errors = $validator->validate($user);
+        if (\count($errors) > 0) {
+            return $this->json($errors, Response::HTTP_BAD_REQUEST);
+        }
+
+        $user->setCompany($this->getUser());
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $user = $normalization->normalize($user);
+
+        return $this->json($user, Response::HTTP_CREATED);
     }
 
     #[Route(

@@ -28,6 +28,46 @@ class UserControllerTest extends WebTestCase
         self::isJson();
     }
 
+    /**
+     * @throws JsonException
+     */
+    public function testCreateNewUserWithInvalidEmail(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'POST',
+            '/api/users',
+            [
+                'first_name' => 'User',
+                'last_name' => 'Test',
+                'email' => '',
+            ]
+        );
+
+        self::assertResponseStatusCodeSame(400, 'An error is thrown when a company creates new user with invalid email');
+        self::isJson();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testCreateNewUserWithInvalidName(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'POST',
+            '/api/users',
+            [
+                'first_name' => 'User',
+                'last_name' => '',
+                'email' => 'user@example.com',
+            ]
+        );
+
+        self::assertResponseStatusCodeSame(400, 'An error is thrown when a company creates new user with invalid name');
+        self::isJson();
+    }
+
     public function testGetUsersList(): void
     {
         self::markTestSkipped('implement auth');

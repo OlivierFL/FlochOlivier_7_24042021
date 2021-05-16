@@ -17,7 +17,7 @@ class SecurityControllerTest extends WebTestCase
                 'name' => 'CompanyName',
                 'password' => 'CompanyPassword1234',
                 'logoAltText' => 'Alt text',
-                'logoUrl' => 'phone.png'
+                'logoUrl' => 'phone.png',
             ],
         );
 

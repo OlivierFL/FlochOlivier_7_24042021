@@ -134,7 +134,7 @@ class UserControllerTest extends WebTestCase
      */
     public function testGetUserDetailsUserNotCompany(): void
     {
-        $client = $this->createAuthenticatedClient();
+        $client = $this->createAuthenticatedClient('Company Test', '1234Company');
         $client->request('GET', '/api/users/1');
 
         self::assertResponseStatusCodeSame(403, 'When User does not belongs to current logged in Company, response code equals to 403');
@@ -179,7 +179,7 @@ class UserControllerTest extends WebTestCase
      */
     public function testGetUserDeleteUserNotCompany(): void
     {
-        $client = $this->createAuthenticatedClient();
+        $client = $this->createAuthenticatedClient('Company Test', '1234Company');
         $client->request('DELETE', '/api/users/1');
 
         self::assertResponseStatusCodeSame(403, 'When User does not belongs to current logged in Company, response code equals to 403');

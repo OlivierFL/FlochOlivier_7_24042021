@@ -81,8 +81,6 @@ class UserController extends AbstractController
             return $this->json($errors, Response::HTTP_BAD_REQUEST);
         }
 
-        $user->setCompany($this->getUser());
-
         $entityManager->persist($user);
         $entityManager->flush();
 

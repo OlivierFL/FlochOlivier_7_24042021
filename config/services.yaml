@@ -37,3 +37,6 @@ services:
     App\Request\CreateEntityParamConverter:
         tags:
             - { name: 'request.param_converter', converter: 'createentity' }
+
+    App\Doctrine\UserSetCompanyListener:
+        tags: ['doctrine.orm.entity_listener']

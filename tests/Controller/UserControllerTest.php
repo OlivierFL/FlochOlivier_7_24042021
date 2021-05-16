@@ -129,6 +129,9 @@ class UserControllerTest extends WebTestCase
         self::isJson();
     }
 
+    /**
+     * @throws JsonException
+     */
     public function testGetUserDetailsUserNotCompany(): void
     {
         $client = $this->createAuthenticatedClient();
@@ -140,11 +143,46 @@ class UserControllerTest extends WebTestCase
 
     public function testDeleteUserNotAuthenticated(): void
     {
-        self::markTestSkipped('implement auth');
         $client = static::createClient();
         $client->request('DELETE', '/api/users/1');
 
-        self::assertResponseIsSuccessful();
+        self::assertResponseStatusCodeSame(401, 'User deletion is not accessible when company is not authenticated');
+        self::isJson();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testDeleteUserAuthenticated(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('DELETE', '/api/users/1');
+
+        self::assertResponseStatusCodeSame(204, 'User deletion is accessible when user is authenticated');
+        self::isJson();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testDeleteUserNotExists(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('DELETE', '/api/users/100000');
+
+        self::assertResponseStatusCodeSame(404, 'When User does not exists, response code equals to 404');
+        self::isJson();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testGetUserDeleteUserNotCompany(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('DELETE', '/api/users/1');
+
+        self::assertResponseStatusCodeSame(403, 'When User does not belongs to current logged in Company, response code equals to 403');
         self::isJson();
     }
 

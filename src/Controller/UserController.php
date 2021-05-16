@@ -91,16 +91,24 @@ class UserController extends AbstractController
         return $this->json($user, Response::HTTP_CREATED);
     }
 
+    /**
+     * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
+     */
     #[Route(
         '/users/{id}',
         name: 'user_delete',
         requirements: ['id' => '\d+'],
         methods: ['DELETE']
     )]
-    public function deleteUser(): Response
+    public function deleteUser(User $user, EntityManagerInterface $entityManager): Response
     {
-        return $this->json([
-            'message' => 'Delete user',
-        ]);
+        if ($this->getUser() !== $user->getCompany()) {
+            return $this->json('Access to this user is forbidden', Response::HTTP_FORBIDDEN);
+        }
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return $this->json([], Response::HTTP_NO_CONTENT);
     }
 }

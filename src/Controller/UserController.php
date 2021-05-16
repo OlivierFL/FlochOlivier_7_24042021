@@ -48,6 +48,10 @@ class UserController extends AbstractController
     )]
     public function getOneUser(User $user, NormalizationService $normalizationService): Response
     {
+        if ($this->getUser() !== $user->getCompany()) {
+            return $this->json('Access to this user is forbidden', Response::HTTP_FORBIDDEN);
+        }
+
         $user = $normalizationService->normalize($user);
 
         return $this->json($user);

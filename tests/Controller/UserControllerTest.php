@@ -106,13 +106,15 @@ class UserControllerTest extends WebTestCase
     /**
      * @throws JsonException
      */
-    public function testGetUserDetails(): void
+    public function testGetUserDetailsAuthenticated(): void
     {
+        $id = 1;
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/users/1');
+        $client->request('GET', '/api/users/'.$id);
 
         self::assertResponseIsSuccessful('User detail is accessible when user is authenticated');
         self::isJson();
+        self::assertContains($id, json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -127,7 +129,16 @@ class UserControllerTest extends WebTestCase
         self::isJson();
     }
 
-    public function testDeleteUser(): void
+    public function testGetUserDetailsUserNotCompany(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/users/1');
+
+        self::assertResponseStatusCodeSame(403, 'When User does not belongs to current logged in Company, response code equals to 403');
+        self::isJson();
+    }
+
+    public function testDeleteUserNotAuthenticated(): void
     {
         self::markTestSkipped('implement auth');
         $client = static::createClient();

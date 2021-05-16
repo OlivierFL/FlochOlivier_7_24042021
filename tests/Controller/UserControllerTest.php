@@ -85,9 +85,6 @@ class UserControllerTest extends WebTestCase
         self::assertArrayHasKey('data', $response);
     }
 
-    /**
-     * @throws JsonException
-     */
     public function testGetUsersListNotAuthenticated(): void
     {
         $client = static::createClient();
@@ -97,13 +94,36 @@ class UserControllerTest extends WebTestCase
         self::isJson();
     }
 
-    public function testGetUserDetails(): void
+    public function testGetUserDetailsNotAuthenticated(): void
     {
-        self::markTestSkipped('implement auth');
         $client = static::createClient();
         $client->request('GET', '/api/users/1');
 
-        self::assertResponseIsSuccessful();
+        self::assertResponseStatusCodeSame(401, 'User detail is not accessible when company is not authenticated');
+        self::isJson();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testGetUserDetails(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/users/1');
+
+        self::assertResponseIsSuccessful('User detail is accessible when user is authenticated');
+        self::isJson();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testGetUserDetailsUserNotExists(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/users/100000');
+
+        self::assertResponseStatusCodeSame(404, 'When User does not exists, response code equals to 404');
         self::isJson();
     }
 

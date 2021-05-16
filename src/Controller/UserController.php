@@ -36,17 +36,21 @@ class UserController extends AbstractController
         return $this->json($usersPaginated);
     }
 
+    /**
+     * @throws ExceptionInterface
+     * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
+     */
     #[Route(
         '/users/{id}',
         name: 'user_detail',
         requirements: ['id' => '\d+'],
         methods: ['GET']
     )]
-    public function getOneUser(): Response
+    public function getOneUser(User $user, NormalizationService $normalizationService): Response
     {
-        return $this->json([
-            'message' => 'Get User details',
-        ]);
+        $user = $normalizationService->normalize($user);
+
+        return $this->json($user);
     }
 
     /**

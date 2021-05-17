@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Security\UserVoter;
 use App\Service\NormalizationService;
 use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,9 +49,7 @@ class UserController extends AbstractController
     )]
     public function getOneUser(User $user, NormalizationService $normalizationService): Response
     {
-        if ($this->getUser() !== $user->getCompany()) {
-            return $this->json('Access to this user is forbidden', Response::HTTP_FORBIDDEN);
-        }
+        $this->denyAccessUnlessGranted(UserVoter::USER_READ, $user);
 
         $user = $normalizationService->normalize($user);
 
@@ -100,9 +99,7 @@ class UserController extends AbstractController
     )]
     public function deleteUser(User $user, EntityManagerInterface $entityManager): Response
     {
-        if ($this->getUser() !== $user->getCompany()) {
-            return $this->json('Access to this user is forbidden', Response::HTTP_FORBIDDEN);
-        }
+        $this->denyAccessUnlessGranted(UserVoter::USER_DELETE, $user);
 
         $entityManager->remove($user);
         $entityManager->flush();

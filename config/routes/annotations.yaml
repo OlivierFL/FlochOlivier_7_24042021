@@ -3,6 +3,8 @@ controllers:
     type: annotation
     prefix: '/api'
     name_prefix: 'api_'
+    defaults:
+        _format: json
 
 kernel:
     resource: ../../src/Kernel.php

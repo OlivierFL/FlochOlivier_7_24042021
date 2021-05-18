@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;
-use App\Service\ProductsService;
+use App\Service\NormalizationService;
+use App\Service\PaginationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,10 +15,6 @@ use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class ProductController extends AbstractController
 {
-    public function __construct(private ProductsService $productsService)
-    {
-    }
-
     /**
      * @throws ExceptionInterface
      */
@@ -26,13 +23,13 @@ class ProductController extends AbstractController
         name: 'products_list',
         methods: ['GET']
     )]
-    public function getProducts(Request $request, ProductRepository $repository): Response
+    public function getProducts(Request $request, ProductRepository $repository, PaginationService $pagination): Response
     {
         $products = $repository->findAll();
         $page = max(1, $request->query->getInt('page', 1));
         $limit = $request->query->getInt('limit', 10);
 
-        $productsPaginated = $this->productsService->getProductsPaginated($products, $page, $limit);
+        $productsPaginated = $pagination->paginateData($products, $page, $limit);
 
         return $this->json($productsPaginated);
     }
@@ -47,9 +44,9 @@ class ProductController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: ['GET']
     )]
-    public function getOneProduct(Product $product): Response
+    public function getOneProduct(Product $product, NormalizationService $normalizationService): Response
     {
-        $product = $this->productsService->normalize($product);
+        $product = $normalizationService->normalize($product);
 
         return $this->json($product);
     }

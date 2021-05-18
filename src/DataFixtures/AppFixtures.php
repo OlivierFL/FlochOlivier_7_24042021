@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Brand;
 use App\Entity\Company;
 use App\Entity\Product;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
@@ -22,6 +23,10 @@ class AppFixtures extends Fixture
      * @var array
      */
     private array $brands = [];
+    /**
+     * @var array
+     */
+    private array $companies = [];
 
     /**
      * AppFixtures constructor.
@@ -40,7 +45,8 @@ class AppFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        $this->loadCompany($manager);
+        $this->loadCompanies($manager);
+        $this->loadUsers($manager);
         $this->loadBrands($manager);
         $this->loadProducts($manager);
 
@@ -49,14 +55,47 @@ class AppFixtures extends Fixture
 
     /**
      * @param ObjectManager $manager
+     *
+     * @throws Exception
      */
-    private function loadCompany(ObjectManager $manager): void
+    private function loadUsers(ObjectManager $manager): void
+    {
+        for ($i = 0; $i < 10; ++$i) {
+            $user = new User();
+            $user->setFirstName($this->faker->firstName());
+            $user->setLastName($this->faker->lastName());
+            $user->setEmail($this->faker->email());
+            if (0 === $i) {
+                $user->setCompany($this->companies[0]);
+            } else {
+                $user->setCompany($this->getRandomCompany());
+            }
+            $manager->persist($user);
+        }
+    }
+
+    /**
+     * @param ObjectManager $manager
+     *
+     * @throws Exception
+     */
+    private function loadCompanies(ObjectManager $manager): void
     {
         $company = new Company();
         $company->setName('Company');
         $company->setPassword($this->encoder->encodePassword($company, 'Company1234'));
         $company->setLogoUrl('apple.png');
         $company->setLogoAltText($company->getName());
+        $this->companies[] = $company;
+
+        $manager->persist($company);
+
+        $company = new Company();
+        $company->setName('Company Test');
+        $company->setPassword($this->encoder->encodePassword($company, '1234Company'));
+        $company->setLogoUrl('apple.png');
+        $company->setLogoAltText($company->getName());
+        $this->companies[] = $company;
 
         $manager->persist($company);
     }
@@ -120,5 +159,15 @@ class AppFixtures extends Fixture
         $key = array_rand($this->brands);
 
         return $this->brands[$key];
+    }
+
+    /**
+     * @return Company
+     */
+    private function getRandomCompany(): Company
+    {
+        $key = array_rand($this->companies);
+
+        return $this->companies[$key];
     }
 }

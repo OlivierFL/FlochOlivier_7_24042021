@@ -28,6 +28,11 @@ class ProductControllerTest extends WebTestCase
 
         self::assertResponseIsSuccessful('Products list is accessible when user is authenticated');
         self::isJson();
+        $response = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertArrayHasKey('page', $response);
+        self::assertArrayHasKey('limit', $response);
+        self::assertArrayHasKey('total', $response);
+        self::assertArrayHasKey('data', $response);
     }
 
     /**
@@ -36,9 +41,9 @@ class ProductControllerTest extends WebTestCase
     public function testGetProductDetails(): void
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/products/106');
+        $client->request('GET', '/api/products/1');
 
-        self::assertResponseIsSuccessful('Products detail is accessible when user is authenticated');
+        self::assertResponseIsSuccessful('Product detail is accessible when user is authenticated');
         self::isJson();
     }
 
@@ -48,7 +53,7 @@ class ProductControllerTest extends WebTestCase
     public function testGetProductDetailsProductNotExists(): void
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/products/1');
+        $client->request('GET', '/api/products/1000');
 
         self::assertResponseStatusCodeSame(404, 'When Product does not exists, response code equals to 404');
         self::isJson();

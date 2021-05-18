@@ -5,9 +5,14 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ORM\EntityListeners({"App\Doctrine\UserSetCompanyListener"})
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity("email")
  */
 class User
 {
@@ -23,16 +28,29 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        max: 255
+    )]
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        max: 255
+    )]
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    #[Assert\Length(
+        max: 255
+    )]
     private $email;
 
     /**
@@ -82,12 +100,12 @@ class User
         return $this;
     }
 
-    public function getCompany(): ?Company
+    public function getCompany(): ?UserInterface
     {
         return $this->company;
     }
 
-    public function setCompany(?Company $company): self
+    public function setCompany(?UserInterface $company): self
     {
         $this->company = $company;
 

@@ -6,39 +6,33 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Security\UserVoter;
 use App\Service\NormalizationService;
-use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class UserController extends AbstractController
+class UserController extends ApiController
 {
-    /**
-     * @throws ExceptionInterface
-     */
     #[Route(
         '/users',
         name: 'users_list',
         methods: ['GET']
     )]
-    public function getUsers(Request $request, UserRepository $repository, PaginationService $pagination): Response
+    public function getUsers(Request $request, UserRepository $repository): Response
     {
-        $users = $repository->findBy(['company' => $this->getUser()]);
         $page = max(1, $request->query->getInt('page', 1));
         $limit = $request->query->getInt('limit', 10);
+        $offset = ($page - 1) * $limit;
+        $total = $repository->count(['company' => $this->getUser()]);
+        $users = $repository->findBy(['company' => $this->getUser()], [], $limit, $offset);
 
-        $usersPaginated = $pagination->paginateData($users, $page, $limit);
-
-        return $this->json($usersPaginated);
+        return $this->jsonApiResponseList($users, page: $page, limit: $limit, total: $total);
     }
 
     /**
-     * @throws ExceptionInterface
      * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
      */
     #[Route(
@@ -47,13 +41,11 @@ class UserController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: ['GET']
     )]
-    public function getOneUser(User $user, NormalizationService $normalizationService): Response
+    public function getOneUser(User $user): Response
     {
         $this->denyAccessUnlessGranted(UserVoter::USER_READ, $user);
 
-        $user = $normalizationService->normalize($user);
-
-        return $this->json($user);
+        return $this->jsonApiResponse($user);
     }
 
     /**

@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,6 +15,26 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\EntityListeners({"App\Doctrine\UserSetCompanyListener"})
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity("email")
+ * @Hateoas\Relation(
+ *     "self",
+ *     href=@Hateoas\Route(
+ *         "api_user_detail",
+ *         parameters={"id": "expr(object.getId())"},
+ *         absolute=true
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "delete",
+ *     href=@Hateoas\Route(
+ *         "api_user_delete",
+ *         parameters={"id": "expr(object.getId())"},
+ *         absolute=true
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "company",
+ *     embedded=@Hateoas\Embedded("expr(object.getCompany())")
+ * )
  */
 class User
 {
@@ -56,6 +78,7 @@ class User
     /**
      * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
+     * @Serializer\Exclude
      */
     private $company;
 

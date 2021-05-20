@@ -81,8 +81,9 @@ class UserControllerTest extends WebTestCase
         $response = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         self::assertArrayHasKey('page', $response);
         self::assertArrayHasKey('limit', $response);
-        self::assertArrayHasKey('total', $response);
-        self::assertArrayHasKey('data', $response);
+        self::assertArrayHasKey('pages', $response);
+        self::assertArrayHasKey('_links', $response);
+        self::assertArrayHasKey('_embedded', $response);
     }
 
     public function testGetUsersListNotAuthenticated(): void

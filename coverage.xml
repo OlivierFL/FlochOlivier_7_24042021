@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1621879842">
-  <project timestamp="1621879842">
+<coverage generated="1621880853">
+  <project timestamp="1621880853">
     <file name="/home/olivier/projets/php/bilemo/src/Controller/ApiController.php">
       <class name="App\Controller\ApiController" namespace="global">
         <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="14" elements="17" coveredelements="17"/>
@@ -333,7 +333,7 @@
     </file>
     <file name="/home/olivier/projets/php/bilemo/src/Kernel.php">
       <class name="App\Kernel" namespace="global">
-        <metrics complexity="6" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="5" elements="17" coveredelements="5"/>
+        <metrics complexity="6" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="0" elements="17" coveredelements="0"/>
       </class>
       <line num="14" type="method" name="configureContainer" visibility="protected" complexity="3" crap="12" count="0"/>
       <line num="16" type="stmt" count="0"/>
@@ -344,15 +344,15 @@
       <line num="22" type="stmt" count="0"/>
       <line num="23" type="stmt" count="0"/>
       <line num="25" type="stmt" count="0"/>
-      <line num="27" type="method" name="configureRoutes" visibility="protected" complexity="3" crap="3.21" count="2"/>
-      <line num="29" type="stmt" count="2"/>
-      <line num="30" type="stmt" count="2"/>
-      <line num="32" type="stmt" count="2"/>
-      <line num="33" type="stmt" count="2"/>
+      <line num="27" type="method" name="configureRoutes" visibility="protected" complexity="3" crap="12" count="0"/>
+      <line num="29" type="stmt" count="0"/>
+      <line num="30" type="stmt" count="0"/>
+      <line num="32" type="stmt" count="0"/>
+      <line num="33" type="stmt" count="0"/>
       <line num="34" type="stmt" count="0"/>
       <line num="35" type="stmt" count="0"/>
-      <line num="37" type="stmt" count="2"/>
-      <metrics loc="38" ncloc="38" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="5" elements="17" coveredelements="5"/>
+      <line num="37" type="stmt" count="0"/>
+      <metrics loc="38" ncloc="38" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="0" elements="17" coveredelements="0"/>
     </file>
     <file name="/home/olivier/projets/php/bilemo/src/Repository/BrandRepository.php">
       <class name="App\Repository\BrandRepository" namespace="global">
@@ -499,6 +499,6 @@
       <line num="33" type="stmt" count="2"/>
       <metrics loc="35" ncloc="28" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="10" elements="12" coveredelements="12"/>
     </file>
-    <metrics files="22" loc="1470" ncloc="1128" classes="22" methods="94" coveredmethods="47" conditionals="0" coveredconditionals="0" statements="279" coveredstatements="135" elements="373" coveredelements="182"/>
+    <metrics files="22" loc="1470" ncloc="1128" classes="22" methods="94" coveredmethods="47" conditionals="0" coveredconditionals="0" statements="279" coveredstatements="130" elements="373" coveredelements="177"/>
   </project>
 </coverage>

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;
+use App\Service\PaginationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,15 +17,11 @@ class ProductController extends ApiController
         name: 'products_list',
         methods: ['GET']
     )]
-    public function getProducts(Request $request, ProductRepository $repository): Response
+    public function getProducts(Request $request, ProductRepository $repository, PaginationService $pagination): Response
     {
-        $page = max(1, $request->query->getInt('page', 1));
-        $limit = $request->query->getInt('limit', 10);
-        $offset = ($page - 1) * $limit;
-        $total = $repository->count([]);
-        $products = $repository->findBy([], [], $limit, $offset);
+        $dataPaginated = $pagination->getDataPaginated($request, $repository, []);
 
-        return $this->jsonApiResponseList($products, page: $page, limit: $limit, total: $total);
+        return $this->jsonApiResponseList($dataPaginated, $request->attributes->get('_route'));
     }
 
     /**

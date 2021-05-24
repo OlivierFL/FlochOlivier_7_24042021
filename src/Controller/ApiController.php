@@ -11,45 +11,44 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends AbstractController
 {
-    public const HAL_JSON = 'application/hal+json';
-
+    /**
+     * ApiController constructor.
+     *
+     * @param SerializerInterface $serializer
+     */
     public function __construct(private SerializerInterface $serializer)
     {
     }
 
     /**
      * @param mixed $data
-     * @param int   $code
-     * @param array $headers
+     * @param int   $status
      *
      * @return Response
      */
-    public function jsonApiResponse(mixed $data, int $code = 200, array $headers = []): Response
+    public function jsonApiResponse(mixed $data, int $status = 200): Response
     {
-        $headers['Content-Type'] = self::HAL_JSON;
         $jsonData = $this->serializer->serialize($data, 'json');
 
-        return new JsonResponse($jsonData, $code, $headers, true);
+        return new JsonResponse($jsonData, $status, [], true);
     }
 
     /**
-     * @param array $data
-     * @param int   $page
-     * @param int   $limit
-     * @param int   $total
+     * @param array  $data
+     * @param string $route
      *
      * @return Response
      */
-    public function jsonApiResponseList(array $data, int $page = 1, int $limit = 10, int $total = 0): Response
+    public function jsonApiResponseList(array $data, string $route): Response
     {
-        $pages = (int) ceil($total / $limit);
+        $pages = (int) ceil($data['total'] / $data['limit']);
 
         $paginatedData = new PaginatedRepresentation(
             new CollectionRepresentation($data),
-            'api_users_list',
+            $route,
             [],
-            $page,
-            $limit,
+            (int) $data['page'],
+            (int) $data['limit'],
             $pages,
             'page',
             'limit',

@@ -14,7 +14,7 @@ tests:
 	APP_ENV=test symfony console doctrine:database:create
 	APP_ENV=test symfony console doctrine:schema:create
 	APP_ENV=test symfony console doctrine:fixtures:load -n
-	APP_ENV=test symfony php bin/phpunit
+	APP_ENV=test symfony php bin/phpunit --coverage-clover coverage
 
 .PHONY: analyze
 analyze:

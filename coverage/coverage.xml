@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1621880853">
-  <project timestamp="1621880853">
+<coverage generated="1621881307">
+  <project timestamp="1621881307">
     <file name="/home/olivier/projets/php/bilemo/src/Controller/ApiController.php">
       <class name="App\Controller\ApiController" namespace="global">
         <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="14" elements="17" coveredelements="17"/>

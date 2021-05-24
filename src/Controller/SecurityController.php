@@ -29,7 +29,7 @@ class SecurityController extends AbstractController
      * @throws Exception
      * @throws ExceptionInterface
      */
-    #[Route('register', name: 'api_register')]
+    #[Route('register', name: 'register')]
     public function register(Company $company, FileUploader $uploader): Response
     {
         $errors = $this->validator->validate($company);

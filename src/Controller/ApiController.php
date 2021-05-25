@@ -44,7 +44,7 @@ class ApiController extends AbstractController
         $pages = (int) ceil($data['total'] / $data['limit']);
 
         $paginatedData = new PaginatedRepresentation(
-            new CollectionRepresentation($data),
+            new CollectionRepresentation($data['data']),
             $route,
             [],
             (int) $data['page'],

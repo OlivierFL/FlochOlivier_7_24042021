@@ -5,14 +5,12 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Security\UserVoter;
-use App\Service\NormalizationService;
 use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends ApiController
@@ -51,9 +49,6 @@ class UserController extends ApiController
      * @param User                   $user
      * @param EntityManagerInterface $entityManager
      * @param ValidatorInterface     $validator
-     * @param NormalizationService   $normalization
-     *
-     * @throws ExceptionInterface
      *
      * @return Response
      */
@@ -62,7 +57,7 @@ class UserController extends ApiController
         name: 'user_create',
         methods: ['POST']
     )]
-    public function createUser(User $user, EntityManagerInterface $entityManager, ValidatorInterface $validator, NormalizationService $normalization): Response
+    public function createUser(User $user, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
         $errors = $validator->validate($user);
         if (\count($errors) > 0) {
@@ -71,8 +66,6 @@ class UserController extends ApiController
 
         $entityManager->persist($user);
         $entityManager->flush();
-
-        $user = $normalization->normalize($user);
 
         return $this->jsonApiResponse($user, Response::HTTP_CREATED);
     }

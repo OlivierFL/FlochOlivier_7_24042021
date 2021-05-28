@@ -10,7 +10,7 @@ down:
 
 .PHONY: tests
 tests:
-	APP_ENV=test symfony console doctrine:database:drop --force || true
+	APP_ENV=test symfony console doctrine:database:drop --force
 	APP_ENV=test symfony console doctrine:database:create
 	APP_ENV=test symfony console doctrine:schema:create
 	APP_ENV=test symfony console doctrine:fixtures:load -n

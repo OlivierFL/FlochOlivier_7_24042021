@@ -74,9 +74,9 @@ class UserControllerTest extends WebTestCase
     public function testGetUsersListAuthenticated(): void
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/users');
+        $client->request('GET', '/api/1/users');
 
-        self::assertResponseIsSuccessful('Users list is accessible when user is authenticated');
+        self::assertResponseIsSuccessful('Users list is accessible when user is authenticated and company id is valid');
         self::isJson();
         $response = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         self::assertArrayHasKey('page', $response);
@@ -89,16 +89,28 @@ class UserControllerTest extends WebTestCase
     public function testGetUsersListNotAuthenticated(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/api/users');
+        $client->request('GET', '/api/1/users');
 
         self::assertResponseStatusCodeSame(401, 'Users list is not accessible when company is not authenticated');
+        self::isJson();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testGetUsersListNotCompany(): void
+    {
+        $client = $this->createAuthenticatedClient('Company Test', '1234Company');
+        $client->request('GET', '/api/1/users');
+
+        self::assertResponseStatusCodeSame(403, 'Users list is not accessible when company id is another company id');
         self::isJson();
     }
 
     public function testGetUserDetailsNotAuthenticated(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/api/users/1');
+        $client->request('GET', '/api/1/users/1');
 
         self::assertResponseStatusCodeSame(401, 'User detail is not accessible when company is not authenticated');
         self::isJson();
@@ -111,9 +123,9 @@ class UserControllerTest extends WebTestCase
     {
         $id = 1;
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/users/'.$id);
+        $client->request('GET', '/api/1/users/'.$id);
 
-        self::assertResponseIsSuccessful('User detail is accessible when user is authenticated');
+        self::assertResponseIsSuccessful('User detail is accessible when user is authenticated and company id is valid');
         self::isJson();
         self::assertContains($id, json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR));
     }
@@ -124,9 +136,21 @@ class UserControllerTest extends WebTestCase
     public function testGetUserDetailsUserNotExists(): void
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/users/100000');
+        $client->request('GET', '/api/1/users/100000');
 
         self::assertResponseStatusCodeSame(404, 'When User does not exists, response code equals to 404');
+        self::isJson();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testGetUserDetailsUserWrongCompanyId(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/2/users/1');
+
+        self::assertResponseStatusCodeSame(404, 'When trying to get company\'s User with wrong company id, response code equals to 404');
         self::isJson();
     }
 
@@ -136,7 +160,7 @@ class UserControllerTest extends WebTestCase
     public function testGetUserDetailsUserNotCompany(): void
     {
         $client = $this->createAuthenticatedClient('Company Test', '1234Company');
-        $client->request('GET', '/api/users/1');
+        $client->request('GET', '/api/1/users/1');
 
         self::assertResponseStatusCodeSame(403, 'When User does not belongs to current logged in Company, response code equals to 403');
         self::isJson();
@@ -145,7 +169,7 @@ class UserControllerTest extends WebTestCase
     public function testDeleteUserNotAuthenticated(): void
     {
         $client = static::createClient();
-        $client->request('DELETE', '/api/users/1');
+        $client->request('DELETE', '/api/1/users/1');
 
         self::assertResponseStatusCodeSame(401, 'User deletion is not accessible when company is not authenticated');
         self::isJson();
@@ -157,9 +181,9 @@ class UserControllerTest extends WebTestCase
     public function testDeleteUserAuthenticated(): void
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('DELETE', '/api/users/1');
+        $client->request('DELETE', '/api/1/users/1');
 
-        self::assertResponseStatusCodeSame(204, 'User deletion is accessible when user is authenticated');
+        self::assertResponseStatusCodeSame(204, 'User deletion is accessible when user is authenticated and company id is valid');
         self::isJson();
     }
 
@@ -169,7 +193,7 @@ class UserControllerTest extends WebTestCase
     public function testDeleteUserNotExists(): void
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('DELETE', '/api/users/100000');
+        $client->request('DELETE', '/api/1/users/100000');
 
         self::assertResponseStatusCodeSame(404, 'When User does not exists, response code equals to 404');
         self::isJson();
@@ -181,9 +205,21 @@ class UserControllerTest extends WebTestCase
     public function testGetUserDeleteUserNotCompany(): void
     {
         $client = $this->createAuthenticatedClient('Company Test', '1234Company');
-        $client->request('DELETE', '/api/users/1');
+        $client->request('DELETE', '/api/2/users/1');
 
-        self::assertResponseStatusCodeSame(403, 'When User does not belongs to current logged in Company, response code equals to 403');
+        self::assertResponseStatusCodeSame(404, 'When User does not belongs to current logged in Company, response code equals to 404');
+        self::isJson();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testGetUserDeleteUserWrongCompanyId(): void
+    {
+        $client = $this->createAuthenticatedClient('Company Test', '1234Company');
+        $client->request('DELETE', '/api/1/users/1');
+
+        self::assertResponseStatusCodeSame(403, 'When trying to delete company\'s User with wrong company id, response code equals to 403');
         self::isJson();
     }
 

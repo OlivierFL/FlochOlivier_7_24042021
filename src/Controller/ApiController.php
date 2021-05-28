@@ -36,17 +36,18 @@ class ApiController extends AbstractController
     /**
      * @param array  $data
      * @param string $route
+     * @param array  $routeParams
      *
      * @return Response
      */
-    public function jsonApiResponseList(array $data, string $route): Response
+    public function jsonApiResponseList(array $data, string $route, array $routeParams = []): Response
     {
         $pages = (int) ceil($data['total'] / $data['limit']);
 
         $paginatedData = new PaginatedRepresentation(
             new CollectionRepresentation($data['data']),
             $route,
-            [],
+            $routeParams,
             (int) $data['page'],
             (int) $data['limit'],
             $pages,

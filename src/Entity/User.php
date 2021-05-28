@@ -19,7 +19,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "self",
  *     href=@Hateoas\Route(
  *         "api_user_detail",
- *         parameters={"id": "expr(object.getId())"},
+ *         parameters={
+ *             "company_id": "expr(object.getCompany().getId())",
+ *             "user_id": "expr(object.getId())"
+ *         },
  *         absolute=true
  *     )
  * )
@@ -27,7 +30,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "delete",
  *     href=@Hateoas\Route(
  *         "api_user_delete",
- *         parameters={"id": "expr(object.getId())"},
+ *         parameters={
+ *             "company_id": "expr(object.getCompany().getId())",
+ *             "user_id": "expr(object.getId())"
+ *         },
  *         absolute=true
  *     )
  * )

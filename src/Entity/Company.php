@@ -21,7 +21,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     "users_list",
  *     href=@Hateoas\Route(
  *         "api_users_list",
- *         parameters={"id": "expr(object.getId())"},
+ *         absolute=true
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "user_create",
+ *     href=@Hateoas\Route(
+ *         "api_user_create",
  *         absolute=true
  *     )
  * )

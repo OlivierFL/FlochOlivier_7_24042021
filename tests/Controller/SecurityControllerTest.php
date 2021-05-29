@@ -73,29 +73,4 @@ class SecurityControllerTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(400, 'An error is thrown when a company registers with a too weak password');
     }
-
-    public function testRegisterNewCompanyWithLogoFile(): void
-    {
-        static::markTestSkipped('Handle file uploads');
-        $client = static::createClient();
-
-        $filePath = '/home/olivier/projets/php/bilemo/tests/files/test.png';
-        $uploadedFile = new UploadedFile($filePath, 'test.png');
-
-        $client->request(
-            'POST',
-            '/api/register',
-            [
-                'name' => 'CompanyName',
-                'password' => 'CompanyPassword',
-                'logoAltText' => 'Alt text',
-            ],
-            [
-                'logo' => $uploadedFile,
-            ]
-        );
-
-        self::assertResponseStatusCodeSame(201, 'New company can be created with a logo file');
-        self::isJson();
-    }
 }

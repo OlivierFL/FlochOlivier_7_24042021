@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Company;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Security\UserVoter;
@@ -12,56 +11,29 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends ApiController
 {
-    /**
-     * @ParamConverter(converter="doctrine.orm", "company", class="App\Entity\Company")
-     *
-     * @param Company           $company
-     * @param Request           $request
-     * @param UserRepository    $repository
-     * @param PaginationService $pagination
-     *
-     * @return Response
-     */
     #[Route(
-        '/{id}/users',
+        '/users',
         name: 'users_list',
-        requirements: ['id' => '\d+'],
         methods: ['GET']
     )]
-    public function getUsers(Company $company, Request $request, UserRepository $repository, PaginationService $pagination): Response
+    public function getUsers(Request $request, UserRepository $repository, PaginationService $pagination): Response
     {
-        if ($company !== $this->getUser()) {
-            throw new AccessDeniedException();
-        }
-
         $dataPaginated = $pagination->getDataPaginated($request, $repository, ['company' => $this->getUser()]);
 
-        return $this->jsonApiResponseList($dataPaginated, $request->attributes->get('_route'), ['id' => $company->getId()]);
+        return $this->jsonApiResponseList($dataPaginated, $request->attributes->get('_route'));
     }
 
     /**
-     * @ParamConverter(
-     *     converter="doctrine.orm",
-     *     "user",
-     *     class="App\Entity\User",
-     *     options={"mapping": {"user_id": "id", "company_id": "company"}})
-     *
-     * @param User $user
-     *
-     * @return Response
+     * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
      */
     #[Route(
-        '/{company_id}/users/{user_id}',
+        '/users/{id}',
         name: 'user_detail',
-        requirements: [
-            'company_id' => '\d+',
-            'user_id' => '\d+',
-        ],
+        requirements: ['id' => '\d+'],
         methods: ['GET']
     )]
     public function getOneUser(User $user): Response
@@ -99,24 +71,12 @@ class UserController extends ApiController
     }
 
     /**
-     * @ParamConverter(
-     *     converter="doctrine.orm",
-     *     "user",
-     *     class="App\Entity\User",
-     *     options={"mapping": {"user_id": "id", "company_id": "company"}})
-     *
-     * @param User                   $user
-     * @param EntityManagerInterface $entityManager
-     *
-     * @return Response
+     * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
      */
     #[Route(
-        '/{company_id}/users/{user_id}',
+        '/users/{id}',
         name: 'user_delete',
-        requirements: [
-            'company_id' => '\d+',
-            'user_id' => '\d+',
-        ],
+        requirements: ['id' => '\d+'],
         methods: ['DELETE']
     )]
     public function deleteUser(User $user, EntityManagerInterface $entityManager): Response

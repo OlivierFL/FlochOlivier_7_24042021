@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ORM\EntityListeners({"App\Doctrine\CompanyListener"})
  * @ORM\Entity(repositoryClass=CompanyRepository::class)
  * @UniqueEntity("name")
  * @Hateoas\Relation(

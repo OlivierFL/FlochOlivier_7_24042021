@@ -10,6 +10,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
+ * @ORM\EntityListeners({"App\Doctrine\BrandListener"})
  * @ORM\Entity(repositoryClass=BrandRepository::class)
  */
 class Brand

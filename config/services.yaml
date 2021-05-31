@@ -44,11 +44,5 @@ services:
     App\Doctrine\UserSetCompanyListener:
         tags: ['doctrine.orm.entity_listener']
 
-    App\Doctrine\ProductListener:
-        tags: ['doctrine.orm.entity_listener']
-
-    App\Doctrine\CompanyListener:
-        tags: ['doctrine.orm.entity_listener']
-
-    App\Doctrine\BrandListener:
+    App\Doctrine\AbsoluteUrlListener:
         tags: ['doctrine.orm.entity_listener']

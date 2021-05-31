@@ -9,7 +9,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * @ORM\EntityListeners({"App\Doctrine\ProductListener"})
+ * @ORM\EntityListeners({"App\Doctrine\AbsoluteUrlListener"})
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  * @Hateoas\Relation(
  *     "self",

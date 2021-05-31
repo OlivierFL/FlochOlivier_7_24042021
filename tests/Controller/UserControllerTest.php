@@ -188,6 +188,20 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
+     * @throws JsonException
+     */
+    public function testUserCompanyHasAbsoluteUrl(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/users/1');
+
+        self::assertResponseIsSuccessful();
+        self::isJson();
+        $response = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertContains('http://localhost/public/uploads/apple.png', $response['_embedded']['company'], 'User\'s Company logo has absolute url');
+    }
+
+    /**
      * Create a client with a default Authorization header.
      *
      * @param string $username

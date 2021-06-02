@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Company;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +14,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SecurityController extends AbstractController
 {
+    /**
+     * SecurityController constructor.
+     *
+     * @param UserPasswordEncoderInterface $encoder
+     * @param ValidatorInterface           $validator
+     * @param EntityManagerInterface       $em
+     */
     public function __construct(
         private UserPasswordEncoderInterface $encoder,
         private ValidatorInterface $validator,
@@ -25,7 +31,10 @@ class SecurityController extends AbstractController
     /**
      * @ParamConverter(converter="createentity", "company", class="App\Entity\Company")
      *
-     * @throws Exception
+     * @param Company      $company
+     * @param FileUploader $uploader
+     *
+     * @return Response
      */
     #[Route('register', name: 'register')]
     public function register(Company $company, FileUploader $uploader): Response

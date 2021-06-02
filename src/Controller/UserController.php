@@ -15,6 +15,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends ApiController
 {
+    /**
+     * @param Request           $request
+     * @param UserRepository    $repository
+     * @param PaginationService $pagination
+     *
+     * @return Response
+     */
     #[Route(
         '/users',
         name: 'users_list',
@@ -29,6 +36,10 @@ class UserController extends ApiController
 
     /**
      * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
+     *
+     * @param User $user
+     *
+     * @return Response
      */
     #[Route(
         '/users/{id}',
@@ -72,6 +83,11 @@ class UserController extends ApiController
 
     /**
      * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
+     *
+     * @param User                   $user
+     * @param EntityManagerInterface $entityManager
+     *
+     * @return Response
      */
     #[Route(
         '/users/{id}',

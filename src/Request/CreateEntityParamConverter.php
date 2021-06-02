@@ -13,6 +13,13 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class CreateEntityParamConverter implements ParamConverterInterface
 {
+    /**
+     * CreateEntityParamConverter constructor.
+     *
+     * @param SerializerInterface $serializer
+     * @param FileUploader        $uploader
+     * @param JsonService         $jsonService
+     */
     public function __construct(private SerializerInterface $serializer, private FileUploader $uploader, private JsonService $jsonService)
     {
     }

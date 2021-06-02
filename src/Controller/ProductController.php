@@ -12,6 +12,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProductController extends ApiController
 {
+    /**
+     * @param Request           $request
+     * @param ProductRepository $repository
+     * @param PaginationService $pagination
+     *
+     * @return Response
+     */
     #[Route(
         '/products',
         name: 'products_list',
@@ -26,6 +33,10 @@ class ProductController extends ApiController
 
     /**
      * @ParamConverter(converter="doctrine.orm", "product", class="App\Entity\Product")
+     *
+     * @param Product $product
+     *
+     * @return Response
      */
     #[Route(
         '/products/{id}',

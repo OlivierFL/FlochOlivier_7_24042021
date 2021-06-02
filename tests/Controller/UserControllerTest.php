@@ -81,8 +81,9 @@ class UserControllerTest extends WebTestCase
         $response = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         self::assertArrayHasKey('page', $response);
         self::assertArrayHasKey('limit', $response);
-        self::assertArrayHasKey('total', $response);
-        self::assertArrayHasKey('data', $response);
+        self::assertArrayHasKey('pages', $response);
+        self::assertArrayHasKey('_links', $response);
+        self::assertArrayHasKey('_embedded', $response);
     }
 
     public function testGetUsersListNotAuthenticated(): void
@@ -184,6 +185,20 @@ class UserControllerTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(403, 'When User does not belongs to current logged in Company, response code equals to 403');
         self::isJson();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testUserCompanyHasAbsoluteUrl(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/users/1');
+
+        self::assertResponseIsSuccessful();
+        self::isJson();
+        $response = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertContains('http://localhost/public/uploads/apple.png', $response['_embedded']['company'], 'User\'s Company logo has absolute url');
     }
 
     /**

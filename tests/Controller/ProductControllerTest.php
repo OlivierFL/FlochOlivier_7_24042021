@@ -31,8 +31,9 @@ class ProductControllerTest extends WebTestCase
         $response = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
         self::assertArrayHasKey('page', $response);
         self::assertArrayHasKey('limit', $response);
-        self::assertArrayHasKey('total', $response);
-        self::assertArrayHasKey('data', $response);
+        self::assertArrayHasKey('pages', $response);
+        self::assertArrayHasKey('_links', $response);
+        self::assertArrayHasKey('_embedded', $response);
     }
 
     /**
@@ -45,6 +46,20 @@ class ProductControllerTest extends WebTestCase
 
         self::assertResponseIsSuccessful('Product detail is accessible when user is authenticated');
         self::isJson();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function testProductImageHasAbsoluteUrl(): void
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/products/1');
+
+        self::assertResponseIsSuccessful();
+        self::isJson();
+        $response = json_decode($client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertContains('http://localhost/public/uploads/phone.jpeg', $response, 'Product logo has absolute url');
     }
 
     /**

@@ -7,8 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
+ * @ORM\EntityListeners({"App\Doctrine\AbsoluteUrlListener"})
  * @ORM\Entity(repositoryClass=BrandRepository::class)
  */
 class Brand
@@ -39,6 +41,7 @@ class Brand
 
     /**
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="brand", orphanRemoval=true)
+     * @Serializer\Exclude
      */
     private $products;
 

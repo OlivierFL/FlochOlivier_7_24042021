@@ -5,9 +5,24 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
+ * @ORM\EntityListeners({"App\Doctrine\AbsoluteUrlListener"})
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @Hateoas\Relation(
+ *     "self",
+ *     href=@Hateoas\Route(
+ *         "api_product_detail",
+ *         parameters={"id": "expr(object.getId())"},
+ *         absolute=true
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "brand",
+ *     embedded=@Hateoas\Embedded("expr(object.getBrand())")
+ * )
  */
 class Product
 {
@@ -48,6 +63,7 @@ class Product
     /**
      * @ORM\ManyToOne(targetEntity=Brand::class, inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
+     * @Serializer\Exclude
      */
     private $brand;
 

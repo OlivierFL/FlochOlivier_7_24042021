@@ -7,14 +7,31 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation as Serializer;
 use Rollerworks\Component\PasswordStrength\Validator\Constraints as RollerworksPassword;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ORM\EntityListeners({"App\Doctrine\AbsoluteUrlListener"})
  * @ORM\Entity(repositoryClass=CompanyRepository::class)
  * @UniqueEntity("name")
+ * @Hateoas\Relation(
+ *     "users_list",
+ *     href=@Hateoas\Route(
+ *         "api_users_list",
+ *         absolute=true
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "user_create",
+ *     href=@Hateoas\Route(
+ *         "api_user_create",
+ *         absolute=true
+ *     )
+ * )
  */
 class Company implements UserInterface
 {
@@ -71,6 +88,7 @@ class Company implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="company", orphanRemoval=true)
+     * @Serializer\Exclude
      */
     private $users;
 

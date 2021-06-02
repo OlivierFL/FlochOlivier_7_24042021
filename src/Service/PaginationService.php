@@ -2,57 +2,34 @@
 
 namespace App\Service;
 
-use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class PaginationService
 {
     public function __construct(
-        private PaginatorInterface $paginator,
-        private NormalizationService $normalization
+        private int $limit
     ) {
     }
 
     /**
-     * @param array $data
-     * @param int   $page
-     * @param int   $limit
-     *
-     * @throws ExceptionInterface
+     * @param Request                          $request
+     * @param ServiceEntityRepositoryInterface $repository
+     * @param array                            $criteria
      *
      * @return array
      */
-    public function paginateData(array $data, int $page, int $limit): array
+    public function getDataPaginated(Request $request, ServiceEntityRepositoryInterface $repository, array $criteria): array
     {
-        $dataPaginated = $this->paginator->paginate(
-            $data,
-            $page,
-            $limit
-        );
+        $page = max(1, $request->query->getInt('page', 1));
+        $limit = $request->query->getInt('limit', $this->limit);
+        $orderBy = $request->query->get('sort') ?? 'id';
+        $direction = $request->query->get('direction') ?? 'asc';
+        $offset = ($page - 1) * $limit;
 
-        $dataPaginated = $this->normalization->normalize($dataPaginated);
+        $total = $repository->count($criteria);
+        $data = $repository->findBy($criteria, [$orderBy => $direction], $limit, $offset);
 
-        $total = \count($data);
-
-        return $this->formatResult($dataPaginated, $total, $page, $limit);
-    }
-
-    /**
-     * @param array $data
-     * @param int   $total
-     * @param int   $page
-     * @param int   $limit
-     *
-     * @return array
-     */
-    private function formatResult(array $data, int $total, int $page, int $limit): array
-    {
-        $result = [];
-        $result['page'] = $page;
-        $result['limit'] = $limit;
-        $result['total'] = $total;
-        $result['data'] = $data;
-
-        return $result;
+        return compact('data', 'page', 'limit', 'total');
     }
 }

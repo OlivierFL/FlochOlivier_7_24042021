@@ -4,13 +4,16 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    uploads_directory: '%kernel.project_dir%/public/uploads'
+    uploads_directory: '%kernel.project_dir%%env(UPLOADS_DIRECTORY)%'
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $limit: '%env(LIMIT)%'
+            $uploadsDirectory: '%env(UPLOADS_DIRECTORY)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -39,4 +42,7 @@ services:
             - { name: 'request.param_converter', converter: 'createentity' }
 
     App\Doctrine\UserSetCompanyListener:
+        tags: ['doctrine.orm.entity_listener']
+
+    App\Doctrine\AbsoluteUrlListener:
         tags: ['doctrine.orm.entity_listener']

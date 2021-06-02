@@ -5,22 +5,16 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Security\UserVoter;
-use App\Service\NormalizationService;
 use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class UserController extends AbstractController
+class UserController extends ApiController
 {
-    /**
-     * @throws ExceptionInterface
-     */
     #[Route(
         '/users',
         name: 'users_list',
@@ -28,17 +22,12 @@ class UserController extends AbstractController
     )]
     public function getUsers(Request $request, UserRepository $repository, PaginationService $pagination): Response
     {
-        $users = $repository->findBy(['company' => $this->getUser()]);
-        $page = max(1, $request->query->getInt('page', 1));
-        $limit = $request->query->getInt('limit', 10);
+        $dataPaginated = $pagination->getDataPaginated($request, $repository, ['company' => $this->getUser()]);
 
-        $usersPaginated = $pagination->paginateData($users, $page, $limit);
-
-        return $this->json($usersPaginated);
+        return $this->jsonApiResponseList($dataPaginated, $request->attributes->get('_route'));
     }
 
     /**
-     * @throws ExceptionInterface
      * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
      */
     #[Route(
@@ -47,13 +36,11 @@ class UserController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: ['GET']
     )]
-    public function getOneUser(User $user, NormalizationService $normalizationService): Response
+    public function getOneUser(User $user): Response
     {
         $this->denyAccessUnlessGranted(UserVoter::USER_READ, $user);
 
-        $user = $normalizationService->normalize($user);
-
-        return $this->json($user);
+        return $this->jsonApiResponse($user);
     }
 
     /**
@@ -62,9 +49,6 @@ class UserController extends AbstractController
      * @param User                   $user
      * @param EntityManagerInterface $entityManager
      * @param ValidatorInterface     $validator
-     * @param NormalizationService   $normalization
-     *
-     * @throws ExceptionInterface
      *
      * @return Response
      */
@@ -73,7 +57,7 @@ class UserController extends AbstractController
         name: 'user_create',
         methods: ['POST']
     )]
-    public function createUser(User $user, EntityManagerInterface $entityManager, ValidatorInterface $validator, NormalizationService $normalization): Response
+    public function createUser(User $user, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
         $errors = $validator->validate($user);
         if (\count($errors) > 0) {
@@ -83,9 +67,7 @@ class UserController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        $user = $normalization->normalize($user);
-
-        return $this->json($user, Response::HTTP_CREATED);
+        return $this->jsonApiResponse($user, Response::HTTP_CREATED);
     }
 
     /**

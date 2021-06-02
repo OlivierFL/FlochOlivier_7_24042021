@@ -17,15 +17,7 @@ class UserVoter extends Voter
      */
     protected function supports(string $attribute, $subject): bool
     {
-        if (!\in_array($attribute, [self::USER_READ, self::USER_DELETE], true)) {
-            return false;
-        }
-
-        if (!$subject instanceof User) {
-            return false;
-        }
-
-        return true;
+        return $subject instanceof User && \in_array($attribute, [self::USER_READ, self::USER_DELETE], true);
     }
 
     /**

@@ -4,20 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;
-use App\Service\NormalizationService;
 use App\Service\PaginationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
-class ProductController extends AbstractController
+class ProductController extends ApiController
 {
-    /**
-     * @throws ExceptionInterface
-     */
     #[Route(
         '/products',
         name: 'products_list',
@@ -25,17 +19,12 @@ class ProductController extends AbstractController
     )]
     public function getProducts(Request $request, ProductRepository $repository, PaginationService $pagination): Response
     {
-        $products = $repository->findAll();
-        $page = max(1, $request->query->getInt('page', 1));
-        $limit = $request->query->getInt('limit', 10);
+        $dataPaginated = $pagination->getDataPaginated($request, $repository, []);
 
-        $productsPaginated = $pagination->paginateData($products, $page, $limit);
-
-        return $this->json($productsPaginated);
+        return $this->jsonApiResponseList($dataPaginated, $request->attributes->get('_route'));
     }
 
     /**
-     * @throws ExceptionInterface
      * @ParamConverter(converter="doctrine.orm", "product", class="App\Entity\Product")
      */
     #[Route(
@@ -44,10 +33,8 @@ class ProductController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: ['GET']
     )]
-    public function getOneProduct(Product $product, NormalizationService $normalizationService): Response
+    public function getOneProduct(Product $product): Response
     {
-        $product = $normalizationService->normalize($product);
-
-        return $this->json($product);
+        return $this->jsonApiResponse($product);
     }
 }

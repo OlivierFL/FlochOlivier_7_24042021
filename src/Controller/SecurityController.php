@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\Company;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as Doc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,12 +34,24 @@ class SecurityController extends AbstractController
     /**
      * @ParamConverter(converter="createentity", "company", class="App\Entity\Company")
      *
+     * @Doc\Response(
+     *     response=201,
+     *     description="Registers a new Company",
+     *     @Model(type=Company::class)
+     * )
+     * @Doc\Tag(name="Company")
+     * @Security(name="Bearer")
+     *
      * @param Company      $company
      * @param FileUploader $uploader
      *
      * @return Response
      */
-    #[Route('register', name: 'register')]
+    #[Route(
+        '/register',
+        name: 'register',
+        methods: ['POST']
+    )]
     public function register(Company $company, FileUploader $uploader): Response
     {
         $errors = $this->validator->validate($company);

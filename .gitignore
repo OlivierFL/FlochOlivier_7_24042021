@@ -27,5 +27,5 @@ phpunit.xml
 ###< lexik/jwt-authentication-bundle ###
 
 ###> PhpDoc ###
-.phpdoc
+/phpdoc
 ###< PhpDoc ###

@@ -7,6 +7,9 @@ use App\Repository\UserRepository;
 use App\Security\UserVoter;
 use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as Doc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +19,17 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserController extends ApiController
 {
     /**
+     * @Doc\Response(
+     *     response=200,
+     *     description="Returns the users list",
+     *     @Doc\JsonContent(
+     *         type="array",
+     *         @Doc\Items(ref=@Model(type=User::class))
+     *     )
+     * )
+     * @Doc\Tag(name="Users")
+     * @Security(name="Bearer")
+     *
      * @param Request           $request
      * @param UserRepository    $repository
      * @param PaginationService $pagination
@@ -37,6 +51,14 @@ class UserController extends ApiController
     /**
      * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
      *
+     * @Doc\Response(
+     *     response=200,
+     *     description="Returns the user detail",
+     *     @Model(type=User::class)
+     * )
+     * @Doc\Tag(name="Users")
+     * @Security(name="Bearer")
+     *
      * @param User $user
      *
      * @return Response
@@ -56,6 +78,14 @@ class UserController extends ApiController
 
     /**
      * @ParamConverter(converter="createentity", "user", class="App\Entity\User")
+     *
+     * @Doc\Response(
+     *     response=201,
+     *     description="Creates the user",
+     *     @Model(type=User::class)
+     * )
+     * @Doc\Tag(name="Users")
+     * @Security(name="Bearer")
      *
      * @param User                   $user
      * @param EntityManagerInterface $entityManager
@@ -83,6 +113,13 @@ class UserController extends ApiController
 
     /**
      * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
+     *
+     * @Doc\Response(
+     *     response=204,
+     *     description="Deletes the user",
+     * )
+     * @Doc\Tag(name="Users")
+     * @Security(name="Bearer")
      *
      * @param User                   $user
      * @param EntityManagerInterface $entityManager

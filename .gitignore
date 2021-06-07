@@ -28,4 +28,5 @@ phpunit.xml
 
 ###> PhpDoc ###
 /phpdoc
+.phpdoc
 ###< PhpDoc ###

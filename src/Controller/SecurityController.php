@@ -39,6 +39,38 @@ class SecurityController extends AbstractController
      *     description="Registers a new Company",
      *     @Model(type=Company::class)
      * )
+     * @Doc\Response(
+     *     response=400,
+     *     description="Validation failed",
+     * )
+     * @Doc\Parameter(
+     *     name="body",
+     *     in="path",
+     *     required=true,
+     *     @Doc\JsonContent(
+     *        type="object",
+     *        @Doc\Property(
+     *             type="string",
+     *             property="name",
+     *             description="Company name",
+     *           ),
+     *        @Doc\Property(
+     *             type="string",
+     *             property="password",
+     *             description="Company password",
+     *          ),
+     *        @Doc\Property(
+     *             type="string",
+     *             property="logoUrl",
+     *             description="Company logo",
+     *           ),
+     *        @Doc\Property(
+     *             type="string",
+     *             property="logoAltText",
+     *             description="Company logo alternative text",
+     *           )
+     *     ),
+     * )
      * @Doc\Tag(name="Company")
      * @Security(name="Bearer")
      *

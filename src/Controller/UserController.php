@@ -27,6 +27,30 @@ class UserController extends ApiController
      *         @Doc\Items(ref=@Model(type=User::class))
      *     )
      * )
+     * @Doc\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @Doc\Schema(type="string")
+     * )
+     * @Doc\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="Number of users per page",
+     *     @Doc\Schema(type="string")
+     * )
+     * @Doc\Parameter(
+     *     name="sort",
+     *     in="query",
+     *     description="The field used to sort the users list (field name must be in camelCase)",
+     *     @Doc\Schema(type="string")
+     * )
+     * @Doc\Parameter(
+     *     name="direction",
+     *     in="query",
+     *     description="Direction (ASC or DESC) to sort the users list",
+     *     @Doc\Schema(type="string")
+     * )
      * @Doc\Tag(name="Users")
      * @Security(name="Bearer")
      *
@@ -56,6 +80,14 @@ class UserController extends ApiController
      *     description="Returns the user detail",
      *     @Model(type=User::class)
      * )
+     * @Doc\Response(
+     *     response=403,
+     *     description="Access denied",
+     * )
+     * @Doc\Response(
+     *     response=404,
+     *     description="User not found",
+     * )
      * @Doc\Tag(name="Users")
      * @Security(name="Bearer")
      *
@@ -83,6 +115,37 @@ class UserController extends ApiController
      *     response=201,
      *     description="Creates the user",
      *     @Model(type=User::class)
+     * )
+     * @Doc\Response(
+     *     response=400,
+     *     description="Validation failed",
+     * )
+     * @Doc\Response(
+     *     response=404,
+     *     description="User not found",
+     * )
+     * @Doc\Parameter(
+     *     name="body",
+     *     in="path",
+     *     required=true,
+     *     @Doc\JsonContent(
+     *        type="object",
+     *        @Doc\Property(
+     *             type="string",
+     *             property="first_name",
+     *             description="User's first name",
+     *           ),
+     *        @Doc\Property(
+     *             type="string",
+     *             property="last_name",
+     *             description="User's last name",
+     *           ),
+     *        @Doc\Property(
+     *             type="string",
+     *             property="email",
+     *             description="User's email",
+     *           )
+     *     )
      * )
      * @Doc\Tag(name="Users")
      * @Security(name="Bearer")
@@ -117,6 +180,14 @@ class UserController extends ApiController
      * @Doc\Response(
      *     response=204,
      *     description="Deletes the user",
+     * )
+     * @Doc\Response(
+     *     response=403,
+     *     description="Access denied",
+     * )
+     * @Doc\Response(
+     *     response=404,
+     *     description="User not found",
      * )
      * @Doc\Tag(name="Users")
      * @Security(name="Bearer")

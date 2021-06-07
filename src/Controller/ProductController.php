@@ -24,6 +24,30 @@ class ProductController extends ApiController
      *         @Doc\Items(ref=@Model(type=Product::class))
      *     )
      * )
+     * @Doc\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @Doc\Schema(type="string")
+     * )
+     * @Doc\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="Number of products per page",
+     *     @Doc\Schema(type="string")
+     * )
+     * @Doc\Parameter(
+     *     name="sort",
+     *     in="query",
+     *     description="The field used to sort the products list (field name must be in camelCase)",
+     *     @Doc\Schema(type="string")
+     * )
+     * @Doc\Parameter(
+     *     name="direction",
+     *     in="query",
+     *     description="Direction (ASC or DESC) to sort the products list",
+     *     @Doc\Schema(type="string")
+     * )
      * @Doc\Tag(name="Products")
      * @Security(name="Bearer")
      *
@@ -52,6 +76,14 @@ class ProductController extends ApiController
      *     response=200,
      *     description="Returns the product detail",
      *     @Model(type=Product::class)
+     * )
+     * @Doc\Response(
+     *     response=403,
+     *     description="Access denied",
+     * )
+     * @Doc\Response(
+     *     response=404,
+     *     description="Product not found",
      * )
      * @Doc\Tag(name="Products")
      * @Security(name="Bearer")

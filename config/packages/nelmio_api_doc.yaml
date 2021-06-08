@@ -4,12 +4,355 @@ nelmio_api_doc:
             title: BileMo
             description: B2B phone catalog API
             version: 1.0.0
+        paths:
+            /api/login_check:
+                post:
+                    tags:
+                        - Auth
+                    description: 'Logs the Company'
+                    requestBody:
+                        description: 'Creates new JWT Token for Company'
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: '#/components/schemas/Credentials'
+                    responses:
+                        '200':
+                            description: 'Login successful'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Token'
+                        '401':
+                            description: 'Invalid credentials'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/LoginError'
+            /api/products:
+                get:
+                    tags:
+                        - Products
+                    description: 'Returns the products list'
+                    responses:
+                        '200':
+                            description: 'Successful response'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/ProductsList'
+                        '401':
+                            description: 'Missing JWT Token in request headers'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/TokenNotFound'
+            /api/users:
+                get:
+                    tags:
+                        - Users
+                    description: 'Returns the users list'
+                    responses:
+                        '200':
+                            description: 'Successful response'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/UsersList'
+                        '401':
+                            description: 'Missing JWT Token in request headers'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/TokenNotFound'
         components:
             securitySchemes:
                 Bearer:
                     type: http
                     scheme: bearer
                     bearerFormat: JWT
+            schemas:
+                Token:
+                    type: object
+                    properties:
+                        token:
+                            type: string
+                Credentials:
+                    type: object
+                    properties:
+                        username:
+                            type: string
+                            example: 'Company'
+                        password:
+                            type: string
+                            example: 'Company1234'
+                LoginError:
+                    type: object
+                    properties:
+                        code:
+                            type: integer
+                            example: 401
+                        message:
+                            type: string
+                            example: 'Invalid credentials.'
+                TokenNotFound:
+                    type: object
+                    properties:
+                        code:
+                            type: integer
+                            example: 401
+                        message:
+                            type: string
+                            example: 'JWT Token not found'
+                Error:
+                    type: object
+                    properties:
+                        type:
+                            type: string
+                        title:
+                            type: string
+                        status:
+                            type: string
+                        detail:
+                            type: string
+                ProductsList:
+                    type: object
+                    properties:
+                        page:
+                            type: integer
+                            example: 1
+                        limit:
+                            type: string
+                            example: 10
+                        pages:
+                            type: string
+                            example: 5
+                        _links:
+                            type: object
+                            properties:
+                                self:
+                                    type: object
+                                    properties:
+                                        href:
+                                            type: string
+                                            example: 'http://localhost:8000/api/products?page=1&limit=10'
+                                first:
+                                    type: object
+                                    properties:
+                                        href:
+                                            type: string
+                                            example: 'http://localhost:8000/api/products?page=1&limit=10'
+                                last:
+                                    type: object
+                                    properties:
+                                        href:
+                                            type: string
+                                            example: 'http://localhost:8000/api/products?page=5&limit=10'
+                                next:
+                                    type: object
+                                    properties:
+                                        href:
+                                            type: string
+                                            example: 'http://localhost:8000/api/products?page=2&limit=10'
+                        _embedded:
+                            type: object
+                            properties:
+                                items:
+                                    type: array
+                                    items:
+                                        properties:
+                                            id:
+                                                type: integer
+                                                example: 1
+                                            name:
+                                                type: string
+                                                example: 'Product name'
+                                            price:
+                                                type: integer
+                                                example: 500.90
+                                            description:
+                                                type: string
+                                                example: 'Product description'
+                                            cover_img_url:
+                                                type: string
+                                                example: 'http://localhost:8000/public/uploads/phone.jpeg'
+                                            cover_img_alt_text:
+                                                type: string
+                                                example: 'Product image alternative text'
+                                            created_at:
+                                                type: string
+                                                format: datetime
+                                                example: '2021-05-16T17:24:09+02:00'
+                                            updated_at:
+                                                type: string
+                                                format: datetime
+                                                example: '2021-05-16T17:24:09+02:00'
+                                            _links:
+                                                type: object
+                                                properties:
+                                                    self:
+                                                        type: object
+                                                        properties:
+                                                            href:
+                                                                type: string
+                                                                example: 'http://localhost:8000/api/products/1'
+                                            _embedded:
+                                                type: object
+                                                properties:
+                                                    brand:
+                                                        type: object
+                                                        properties:
+                                                            id:
+                                                                type: integer
+                                                                example: 1
+                                                            name:
+                                                                type: string
+                                                                example: 'Brand name'
+                                                            logo_url:
+                                                                type: string
+                                                                example: 'http://localhost:8000/public/uploads/apple.png'
+                                                            logo_alt_text:
+                                                                type: string
+                                                                example: 'Brand logo alternative text'
+                                                            created_at:
+                                                                type: string
+                                                                format: datetime
+                                                                example: '2021-05-16T17:24:09+02:00'
+                                                            updated_at:
+                                                                type: string
+                                                                format: datetime
+                                                                example: '2021-05-16T17:24:09+02:00'
+
+                UsersList:
+                    type: object
+                    properties:
+                        page:
+                            type: integer
+                            example: 1
+                        limit:
+                            type: string
+                            example: 10
+                        pages:
+                            type: string
+                            example: 5
+                        _links:
+                            type: object
+                            properties:
+                                self:
+                                    type: object
+                                    properties:
+                                        href:
+                                            type: string
+                                            example: 'http://localhost:8000/api/users?page=1&limit=10'
+                                first:
+                                    type: object
+                                    properties:
+                                        href:
+                                            type: string
+                                            example: 'http://localhost:8000/api/users?page=1&limit=10'
+                                last:
+                                    type: object
+                                    properties:
+                                        href:
+                                            type: string
+                                            example: 'http://localhost:8000/api/users?page=5&limit=10'
+                                next:
+                                    type: object
+                                    properties:
+                                        href:
+                                            type: string
+                                            example: 'http://localhost:8000/api/users?page=2&limit=10'
+                        _embedded:
+                            type: object
+                            properties:
+                                items:
+                                    type: array
+                                    items:
+                                        properties:
+                                            id:
+                                                type: integer
+                                                example: 1
+                                            first_name:
+                                                type: string
+                                                example: 'First name'
+                                            last_name:
+                                                type: string
+                                                example: 'Last name'
+                                            email:
+                                                type: string
+                                                format: email
+                                                example: 'user@example.com'
+                                            created_at:
+                                                type: string
+                                                format: datetime
+                                                example: '2021-05-16T17:24:09+02:00'
+                                            updated_at:
+                                                type: string
+                                                format: datetime
+                                                example: '2021-05-16T17:24:09+02:00'
+                                            _links:
+                                                type: object
+                                                properties:
+                                                    self:
+                                                        type: object
+                                                        properties:
+                                                            href:
+                                                                type: string
+                                                                example: 'http://localhost:8000/api/users/1'
+                                                    delete:
+                                                        type: object
+                                                        properties:
+                                                            href:
+                                                                type: string
+                                                                example: 'http://localhost:8000/api/users/1'
+                                            _embedded:
+                                                type: object
+                                                properties:
+                                                    company:
+                                                        type: object
+                                                        properties:
+                                                            id:
+                                                                type: integer
+                                                                example: 1
+                                                            name:
+                                                                type: string
+                                                                example: 'Company name'
+                                                            roles:
+                                                                type: array
+                                                                items: []
+                                                            password:
+                                                                type: string
+                                                                format: password
+                                                            logo_url:
+                                                                type: string
+                                                                example: 'http://localhost:8000/public/uploads/apple.png'
+                                                            logo_alt_text:
+                                                                type: string
+                                                                example: 'Company logo alternative text'
+                                                            created_at:
+                                                                type: string
+                                                                format: datetime
+                                                                example: '2021-05-16T17:24:09+02:00'
+                                                            updated_at:
+                                                                type: string
+                                                                format: datetime
+                                                                example: '2021-05-16T17:24:09+02:00'
+                                                            _links:
+                                                                type: object
+                                                                properties:
+                                                                    users_list:
+                                                                        type: object
+                                                                        properties:
+                                                                            href:
+                                                                                type: string
+                                                                                example: 'http://localhost:8000/api/users'
+                                                                    user_create:
+                                                                        type: object
+                                                                        properties:
+                                                                            href:
+                                                                                type: string
+                                                                                example: 'http://localhost:8000/api/users'
+
     areas: # to filter documented areas
         path_patterns:
             - ^/api(?!/doc$) # Accepts routes under /api except /api/doc

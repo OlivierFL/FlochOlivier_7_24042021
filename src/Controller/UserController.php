@@ -19,14 +19,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserController extends ApiController
 {
     /**
-     * @Doc\Response(
-     *     response=200,
-     *     description="Returns the users list",
-     *     @Doc\JsonContent(
-     *         type="array",
-     *         @Doc\Items(ref=@Model(type=User::class))
-     *     )
-     * )
      * @Doc\Parameter(
      *     name="page",
      *     in="query",

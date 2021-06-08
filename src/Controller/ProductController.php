@@ -16,14 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductController extends ApiController
 {
     /**
-     * @Doc\Response(
-     *     response=200,
-     *     description="Returns the products list",
-     *     @Doc\JsonContent(
-     *         type="array",
-     *         @Doc\Items(ref=@Model(type=Product::class))
-     *     )
-     * )
      * @Doc\Parameter(
      *     name="page",
      *     in="query",
@@ -48,7 +40,6 @@ class ProductController extends ApiController
      *     description="Direction (ASC or DESC) to sort the products list",
      *     @Doc\Schema(type="string")
      * )
-     * @Doc\Tag(name="Products")
      * @Security(name="Bearer")
      *
      * @param Request           $request

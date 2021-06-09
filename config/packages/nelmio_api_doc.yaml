@@ -47,11 +47,35 @@ nelmio_api_doc:
                                 application/json:
                                     schema:
                                         $ref: '#/components/schemas/TokenNotFound'
+            '/api/products/{id}':
+                get:
+                    tags:
+                        - Products
+                    description: 'Returns the product detail'
+                    responses:
+                        '200':
+                            description: 'Successful response'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Product'
+                        '401':
+                            description: 'Missing JWT Token in request headers'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/TokenNotFound'
+                        '404':
+                            description: 'Product not found'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error404'
             /api/users:
                 get:
                     tags:
                         - Users
-                    description: 'Returns the users list'
+                    description: 'Returns the users list of the current logged in Company'
                     responses:
                         '200':
                             description: 'Successful response'
@@ -65,6 +89,87 @@ nelmio_api_doc:
                                 application/json:
                                     schema:
                                         $ref: '#/components/schemas/TokenNotFound'
+                post:
+                    tags:
+                        - Users
+                    description: 'Create a new User'
+                    requestBody:
+                        description: 'Data required to create new User'
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: '#/components/schemas/UserCreation'
+                    responses:
+                        '201':
+                            description: 'User successfully created'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/User'
+                        '400':
+                            description: 'Validation failed'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/ValidationFailed'
+                        '401':
+                            description: 'Missing JWT Token in request headers'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/TokenNotFound'
+            '/api/users/{id}':
+                get:
+                    tags:
+                        - Users
+                    description: 'Returns the user detail'
+                    responses:
+                        '200':
+                            description: 'Successful response'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/User'
+                        '401':
+                            description: 'Missing JWT Token in request headers'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/TokenNotFound'
+                        '403':
+                            description: 'User is not related to current logged in Company'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error403'
+                        '404':
+                            description: 'User not found'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error404'
+                delete:
+                    tags:
+                        - Users
+                    description: 'Deletes an User'
+                    responses:
+                        '204':
+                            description: 'User successfully deleted'
+                            content:
+                                application/json:
+                        '403':
+                            description: 'User is not related to current logged in Company'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error403'
+                        '404':
+                            description: 'User not found'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error404'
             /api/register:
                 post:
                     tags:
@@ -117,6 +222,21 @@ nelmio_api_doc:
                             type: string
                             maximum: 255
                             example: 'Logo alt text'
+                UserCreation:
+                    type: object
+                    properties:
+                        first_name:
+                            type: string
+                            maximum: 255
+                            example: 'User'
+                        last_name:
+                            type: string
+                            maximum: 255
+                            example: 'Test'
+                        email:
+                            type: string
+                            format: email
+                            example: 'user@example.com'
                 ValidationFailed:
                     type: object
                     properties:
@@ -153,6 +273,7 @@ nelmio_api_doc:
                     properties:
                         token:
                             type: string
+                            example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2MjMyNjA5NDAsImV4cCI6MTYyMzI2NDU0MCwicm9sZXMiOlsiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiQ29tcGFueSJ9.Fc-4dtfngSc-O3YQ0ChlmGA5id8weRF8V-Dh7b4j1H5_O4mbqMNo807RM_fE2lVBtFBz5ICXtBmyvV_HZtxRUusikw23WwUXsiDug9isn2u6YLh-IMLPqU1k3exo-s_aDNLyn3LCfpM0czKT2qqHQ7rlEiPIW_l1bkoh-R82tRU6i-FOEELbsmVqTUttM_gpsabjstSpCfKPhWe9FEURuB_M3QIWMdFmhlXpGNqugjHfxIf_yzcDSugKqt6racx-5VjUP1CJ6td4IHbLmY7VTUpwFJM3C3i9MAbJNfSdGw7EJ-b6OXgS6tDigBSQ4EzYDx7H9XJY_Ahs6Y2VzxVpTw'
                 Credentials:
                     type: object
                     properties:
@@ -180,17 +301,36 @@ nelmio_api_doc:
                         message:
                             type: string
                             example: 'JWT Token not found'
-                Error:
+                Error403:
                     type: object
                     properties:
                         type:
                             type: string
+                            example: 'https://tools.ietf.org/html/rfc2616#section-10'
                         title:
                             type: string
+                            example: 'An error occurred'
                         status:
-                            type: string
+                            type: integer
+                            example: 403
                         detail:
                             type: string
+                            example: 'Forbidden'
+                Error404:
+                    type: object
+                    properties:
+                        type:
+                            type: string
+                            example: 'https://tools.ietf.org/html/rfc2616#section-10'
+                        title:
+                            type: string
+                            example: 'An error occurred'
+                        status:
+                            type: integer
+                            example: 404
+                        detail:
+                            type: string
+                            example: 'Not found'
                 ProductsList:
                     type: object
                     properties:
@@ -236,69 +376,71 @@ nelmio_api_doc:
                                 items:
                                     type: array
                                     items:
-                                        properties:
-                                            id:
-                                                type: integer
-                                                example: 1
-                                            name:
-                                                type: string
-                                                example: 'Product name'
-                                            price:
-                                                type: integer
-                                                example: 500.90
-                                            description:
-                                                type: string
-                                                example: 'Product description'
-                                            cover_img_url:
-                                                type: string
-                                                example: 'http://localhost:8000/public/uploads/phone.jpeg'
-                                            cover_img_alt_text:
-                                                type: string
-                                                example: 'Product image alternative text'
-                                            created_at:
-                                                type: string
-                                                format: datetime
-                                                example: '2021-05-16T17:24:09+02:00'
-                                            updated_at:
-                                                type: string
-                                                format: datetime
-                                                example: '2021-05-16T17:24:09+02:00'
-                                            _links:
-                                                type: object
-                                                properties:
-                                                    self:
-                                                        type: object
-                                                        properties:
-                                                            href:
-                                                                type: string
-                                                                example: 'http://localhost:8000/api/products/1'
-                                            _embedded:
-                                                type: object
-                                                properties:
-                                                    brand:
-                                                        type: object
-                                                        properties:
-                                                            id:
-                                                                type: integer
-                                                                example: 1
-                                                            name:
-                                                                type: string
-                                                                example: 'Brand name'
-                                                            logo_url:
-                                                                type: string
-                                                                example: 'http://localhost:8000/public/uploads/apple.png'
-                                                            logo_alt_text:
-                                                                type: string
-                                                                example: 'Brand logo alternative text'
-                                                            created_at:
-                                                                type: string
-                                                                format: datetime
-                                                                example: '2021-05-16T17:24:09+02:00'
-                                                            updated_at:
-                                                                type: string
-                                                                format: datetime
-                                                                example: '2021-05-16T17:24:09+02:00'
-
+                                        $ref: '#/components/schemas/Product'
+                Product:
+                    type: object
+                    properties:
+                        id:
+                            type: integer
+                            example: 1
+                        name:
+                            type: string
+                            example: 'Product name'
+                        price:
+                            type: integer
+                            example: 500.90
+                        description:
+                            type: string
+                            example: 'Product description'
+                        cover_img_url:
+                            type: string
+                            example: 'http://localhost:8000/public/uploads/phone.jpeg'
+                        cover_img_alt_text:
+                            type: string
+                            example: 'Product image alternative text'
+                        created_at:
+                            type: string
+                            format: datetime
+                            example: '2021-05-16T17:24:09+02:00'
+                        updated_at:
+                            type: string
+                            format: datetime
+                            example: '2021-05-16T17:24:09+02:00'
+                        _links:
+                            type: object
+                            properties:
+                                self:
+                                    type: object
+                                    properties:
+                                        href:
+                                            type: string
+                                            example: 'http://localhost:8000/api/products/1'
+                        _embedded:
+                            type: object
+                            properties:
+                                brand:
+                                    type: object
+                                    properties:
+                                        id:
+                                            type: integer
+                                            example: 1
+                                        name:
+                                            type: string
+                                            example: 'Brand name'
+                                        logo_url:
+                                            type: string
+                                            example: 'http://localhost:8000/public/uploads/apple.png'
+                                        logo_alt_text:
+                                            type: string
+                                            example: 'Brand logo alternative text'
+                                        created_at:
+                                            type: string
+                                            format: datetime
+                                            example: '2021-05-16T17:24:09+02:00'
+                                        updated_at:
+                                            type: string
+                                            format: datetime
+                                            example: '2021-05-16T17:24:09+02:00'
                 UsersList:
                     type: object
                     properties:
@@ -344,91 +486,93 @@ nelmio_api_doc:
                                 items:
                                     type: array
                                     items:
-                                        properties:
-                                            id:
-                                                type: integer
-                                                example: 1
-                                            first_name:
-                                                type: string
-                                                example: 'First name'
-                                            last_name:
-                                                type: string
-                                                example: 'Last name'
-                                            email:
-                                                type: string
-                                                format: email
-                                                example: 'user@example.com'
-                                            created_at:
-                                                type: string
-                                                format: datetime
-                                                example: '2021-05-16T17:24:09+02:00'
-                                            updated_at:
-                                                type: string
-                                                format: datetime
-                                                example: '2021-05-16T17:24:09+02:00'
-                                            _links:
-                                                type: object
-                                                properties:
-                                                    self:
-                                                        type: object
-                                                        properties:
-                                                            href:
-                                                                type: string
-                                                                example: 'http://localhost:8000/api/users/1'
-                                                    delete:
-                                                        type: object
-                                                        properties:
-                                                            href:
-                                                                type: string
-                                                                example: 'http://localhost:8000/api/users/1'
-                                            _embedded:
-                                                type: object
-                                                properties:
-                                                    company:
-                                                        type: object
-                                                        properties:
-                                                            id:
-                                                                type: integer
-                                                                example: 1
-                                                            name:
-                                                                type: string
-                                                                example: 'Company name'
-                                                            roles:
-                                                                type: array
-                                                                items: []
-                                                            password:
-                                                                type: string
-                                                                format: password
-                                                            logo_url:
-                                                                type: string
-                                                                example: 'http://localhost:8000/public/uploads/apple.png'
-                                                            logo_alt_text:
-                                                                type: string
-                                                                example: 'Company logo alternative text'
-                                                            created_at:
-                                                                type: string
-                                                                format: datetime
-                                                                example: '2021-05-16T17:24:09+02:00'
-                                                            updated_at:
-                                                                type: string
-                                                                format: datetime
-                                                                example: '2021-05-16T17:24:09+02:00'
-                                                            _links:
-                                                                type: object
-                                                                properties:
-                                                                    users_list:
-                                                                        type: object
-                                                                        properties:
-                                                                            href:
-                                                                                type: string
-                                                                                example: 'http://localhost:8000/api/users'
-                                                                    user_create:
-                                                                        type: object
-                                                                        properties:
-                                                                            href:
-                                                                                type: string
-                                                                                example: 'http://localhost:8000/api/users'
-
+                                        $ref: '#/components/schemas/User'
+                User:
+                    type: object
+                    properties:
+                        id:
+                            type: integer
+                            example: 1
+                        first_name:
+                            type: string
+                            example: 'First name'
+                        last_name:
+                            type: string
+                            example: 'Last name'
+                        email:
+                            type: string
+                            format: email
+                            example: 'user@example.com'
+                        created_at:
+                            type: string
+                            format: datetime
+                            example: '2021-05-16T17:24:09+02:00'
+                        updated_at:
+                            type: string
+                            format: datetime
+                            example: '2021-05-16T17:24:09+02:00'
+                        _links:
+                            type: object
+                            properties:
+                                self:
+                                    type: object
+                                    properties:
+                                        href:
+                                            type: string
+                                            example: 'http://localhost:8000/api/users/1'
+                                delete:
+                                    type: object
+                                    properties:
+                                        href:
+                                            type: string
+                                            example: 'http://localhost:8000/api/users/1'
+                        _embedded:
+                            type: object
+                            properties:
+                                company:
+                                    type: object
+                                    properties:
+                                        id:
+                                            type: integer
+                                            example: 1
+                                        name:
+                                            type: string
+                                            example: 'Company name'
+                                        roles:
+                                            type: array
+                                            items: [ ]
+                                        password:
+                                            type: string
+                                            format: password
+                                        logo_url:
+                                            type: string
+                                            example: 'http://localhost:8000/public/uploads/apple.png'
+                                        logo_alt_text:
+                                            type: string
+                                            example: 'Company logo alternative text'
+                                        created_at:
+                                            type: string
+                                            format: datetime
+                                            example: '2021-05-16T17:24:09+02:00'
+                                        updated_at:
+                                            type: string
+                                            format: datetime
+                                            example: '2021-05-16T17:24:09+02:00'
+                                        _links:
+                                            type: object
+                                            properties:
+                                                users_list:
+                                                    type: object
+                                                    properties:
+                                                        href:
+                                                            type: string
+                                                            example: 'http://localhost:8000/api/users'
+                                                user_create:
+                                                    type: object
+                                                    properties:
+                                                        href:
+                                                            type: string
+                                                            example: 'http://localhost:8000/api/users'
     areas: # to filter documented areas
         path_patterns:
             - ^/api(?!/doc$) # Accepts routes under /api except /api/doc

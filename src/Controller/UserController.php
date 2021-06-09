@@ -7,7 +7,6 @@ use App\Repository\UserRepository;
 use App\Security\UserVoter;
 use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
-use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as Doc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -43,7 +42,6 @@ class UserController extends ApiController
      *     description="Direction (ASC or DESC) to sort the users list",
      *     @Doc\Schema(type="string")
      * )
-     * @Doc\Tag(name="Users")
      * @Security(name="Bearer")
      *
      * @param Request           $request
@@ -67,20 +65,6 @@ class UserController extends ApiController
     /**
      * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
      *
-     * @Doc\Response(
-     *     response=200,
-     *     description="Returns the user detail",
-     *     @Model(type=User::class)
-     * )
-     * @Doc\Response(
-     *     response=403,
-     *     description="Access denied",
-     * )
-     * @Doc\Response(
-     *     response=404,
-     *     description="User not found",
-     * )
-     * @Doc\Tag(name="Users")
      * @Security(name="Bearer")
      *
      * @param User $user
@@ -103,43 +87,6 @@ class UserController extends ApiController
     /**
      * @ParamConverter(converter="createentity", "user", class="App\Entity\User")
      *
-     * @Doc\Response(
-     *     response=201,
-     *     description="Creates the user",
-     *     @Model(type=User::class)
-     * )
-     * @Doc\Response(
-     *     response=400,
-     *     description="Validation failed",
-     * )
-     * @Doc\Response(
-     *     response=404,
-     *     description="User not found",
-     * )
-     * @Doc\Parameter(
-     *     name="body",
-     *     in="path",
-     *     required=true,
-     *     @Doc\JsonContent(
-     *        type="object",
-     *        @Doc\Property(
-     *             type="string",
-     *             property="first_name",
-     *             description="User's first name",
-     *           ),
-     *        @Doc\Property(
-     *             type="string",
-     *             property="last_name",
-     *             description="User's last name",
-     *           ),
-     *        @Doc\Property(
-     *             type="string",
-     *             property="email",
-     *             description="User's email",
-     *           )
-     *     )
-     * )
-     * @Doc\Tag(name="Users")
      * @Security(name="Bearer")
      *
      * @param User                   $user
@@ -169,19 +116,6 @@ class UserController extends ApiController
     /**
      * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
      *
-     * @Doc\Response(
-     *     response=204,
-     *     description="Deletes the user",
-     * )
-     * @Doc\Response(
-     *     response=403,
-     *     description="Access denied",
-     * )
-     * @Doc\Response(
-     *     response=404,
-     *     description="User not found",
-     * )
-     * @Doc\Tag(name="Users")
      * @Security(name="Bearer")
      *
      * @param User                   $user

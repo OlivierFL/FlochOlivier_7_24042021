@@ -65,13 +65,89 @@ nelmio_api_doc:
                                 application/json:
                                     schema:
                                         $ref: '#/components/schemas/TokenNotFound'
+            /api/register:
+                post:
+                    tags:
+                        - Company
+                    description: 'Registers a new Company'
+                    requestBody:
+                        $ref: '#/components/requestBodies/CompanyRegistrationBody'
+                    responses:
+                        '400':
+                            description: 'Validation failed'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/ValidationFailed'
         components:
             securitySchemes:
                 Bearer:
                     type: http
                     scheme: bearer
                     bearerFormat: JWT
+            requestBodies:
+                CompanyRegistrationBody:
+                    description: 'Data required to register a new Company'
+                    required: true
+                    content:
+                        multipart/form-data:
+                            schema:
+                                $ref: '#/components/schemas/CompanyRegistration'
             schemas:
+                CompanyRegistration:
+                    type: object
+                    properties:
+                        name:
+                            type: string
+                            maximum: 255
+                            example: 'Company'
+                        password:
+                            description: 'Password must contain lower case and upper case letters, one number and 6 characters. An additional check will be done, to ensure password has not been leaked in a data breach'
+                            type: string
+                            format: password
+                            maximum: 255
+                            example: 'Company1234'
+                        logo:
+                            description: 'Required. Logo of the Company. An empty file will result in a validation error'
+                            type: string
+                            format: binary
+                            example: 'logo.jpeg'
+                        logo_alt_text:
+                            description: "The alternative text for the Company's logo"
+                            type: string
+                            maximum: 255
+                            example: 'Logo alt text'
+                ValidationFailed:
+                    type: object
+                    properties:
+                        type:
+                            type: string
+                            example: 'https://symfony.com/errors/validation'
+                        title:
+                            type: string
+                            example: 'Validation Failed'
+                        detail:
+                            type: string
+                            example: 'name: This value is already used.'
+                        violations:
+                            type: array
+                            items:
+                                properties:
+                                    propertyPath:
+                                        type: string
+                                        example: 'name'
+                                    title:
+                                        type: string
+                                        example: 'This value is already used.'
+                                    parameters:
+                                        type: object
+                                        properties:
+                                            '{{ value }}':
+                                                type: string
+                                                example: '"Company"'
+                                    type:
+                                        type: string
+                                        example: 'urn:uuid:23bd9dbf-6b9b-41cd-a99e-4844bcf3077f'
                 Token:
                     type: object
                     properties:

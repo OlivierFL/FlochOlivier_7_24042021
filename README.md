@@ -61,7 +61,7 @@ Unit Tests :
     UPLOADS_DIRECTORY=/public/uploads
     ```
 
-4. After configuring the database connection, run `bin/console doctrine:database:create` to create the database.
+4. After configuring the database connection, run `bin/console doctrine:database:create` to create the database, then `bin/console doctrine:schema:create` to create database tables.
 
 
 5. Then run `bin/console doctrine:fixtures:load` to load the example data into the database. If you're using _Docker_, _PhpMyAdmin_ is available on `localhost:8080` (_user_ : `root`, _password_ : `admin`).

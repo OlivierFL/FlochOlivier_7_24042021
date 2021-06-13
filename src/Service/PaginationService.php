@@ -7,6 +7,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PaginationService
 {
+    /**
+     * PaginationService constructor.
+     *
+     * @param int $limit
+     */
     public function __construct(
         private int $limit
     ) {

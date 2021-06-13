@@ -9,8 +9,9 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FileUploader
 {
-    private string $baseDirectory;
-    private SluggerInterface $slugger;
+    /**
+     * @var Filesystem
+     */
     private Filesystem $fileSystem;
 
     /**
@@ -19,10 +20,8 @@ class FileUploader
      * @param SluggerInterface $slugger
      * @param string           $baseDirectory
      */
-    public function __construct(SluggerInterface $slugger, string $baseDirectory)
+    public function __construct(private SluggerInterface $slugger, private string $baseDirectory)
     {
-        $this->slugger = $slugger;
-        $this->baseDirectory = $baseDirectory;
         $this->fileSystem = new Filesystem();
     }
 
@@ -44,7 +43,7 @@ class FileUploader
 
         try {
             $file->move($this->baseDirectory, $newFilename);
-        } catch (FileException $e) {
+        } catch (FileException) {
             $this->fileSystem->remove($newFilename);
         }
 

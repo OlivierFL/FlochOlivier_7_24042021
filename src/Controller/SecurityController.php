@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Company;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as Doc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +17,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SecurityController extends AbstractController
 {
+    /**
+     * SecurityController constructor.
+     *
+     * @param UserPasswordEncoderInterface $encoder
+     * @param ValidatorInterface           $validator
+     * @param EntityManagerInterface       $em
+     */
     public function __construct(
         private UserPasswordEncoderInterface $encoder,
         private ValidatorInterface $validator,
@@ -25,9 +34,24 @@ class SecurityController extends AbstractController
     /**
      * @ParamConverter(converter="createentity", "company", class="App\Entity\Company")
      *
-     * @throws Exception
+     * @Doc\Response(
+     *     response=201,
+     *     description="Company successfully registered",
+     *     @Model(type=Company::class)
+     * )
+     * @Doc\Tag(name="Company")
+     * @Security(name="Bearer")
+     *
+     * @param Company      $company
+     * @param FileUploader $uploader
+     *
+     * @return Response
      */
-    #[Route('register', name: 'register')]
+    #[Route(
+        '/register',
+        name: 'register',
+        methods: ['POST']
+    )]
     public function register(Company $company, FileUploader $uploader): Response
     {
         $errors = $this->validator->validate($company);

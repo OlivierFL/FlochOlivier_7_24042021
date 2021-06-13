@@ -181,6 +181,19 @@
     "namshi/jose": {
         "version": "7.2.3"
     },
+    "nelmio/api-doc-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "c8e0c38e1a280ab9e37587a8fa32b251d5bc1c94"
+        },
+        "files": [
+            "config/packages/nelmio_api_doc.yaml",
+            "config/routes/nelmio_api_doc.yaml"
+        ]
+    },
     "netresearch/jsonmapper": {
         "version": "v2.1.0"
     },
@@ -333,6 +346,9 @@
             "config/packages/stof_doctrine_extensions.yaml"
         ]
     },
+    "symfony/asset": {
+        "version": "v5.2.10"
+    },
     "symfony/browser-kit": {
         "version": "v5.2.4"
     },
@@ -446,6 +462,9 @@
     "symfony/mime": {
         "version": "v5.2.7"
     },
+    "symfony/options-resolver": {
+        "version": "v5.2.10"
+    },
     "symfony/orm-pack": {
         "version": "v2.1.0"
     },
@@ -484,6 +503,9 @@
     },
     "symfony/polyfill-php80": {
         "version": "v1.22.1"
+    },
+    "symfony/polyfill-php81": {
+        "version": "v1.23.0"
     },
     "symfony/property-access": {
         "version": "v5.2.4"
@@ -563,6 +585,26 @@
     "symfony/translation-contracts": {
         "version": "v2.4.0"
     },
+    "symfony/twig-bridge": {
+        "version": "v5.2.10"
+    },
+    "symfony/twig-bundle": {
+        "version": "5.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.0",
+            "ref": "fab9149bbaa4d5eca054ed93f9e1b66cc500895d"
+        },
+        "files": [
+            "config/packages/test/twig.yaml",
+            "config/packages/twig.yaml",
+            "templates/base.html.twig"
+        ]
+    },
+    "symfony/twig-pack": {
+        "version": "v1.0.1"
+    },
     "symfony/validator": {
         "version": "4.3",
         "recipe": {
@@ -588,6 +630,9 @@
     "theseer/tokenizer": {
         "version": "1.2.0"
     },
+    "twig/extra-bundle": {
+        "version": "v3.3.1"
+    },
     "twig/twig": {
         "version": "v3.3.1"
     },
@@ -599,5 +644,8 @@
     },
     "webmozart/path-util": {
         "version": "2.3.0"
+    },
+    "zircote/swagger-php": {
+        "version": "3.2.1"
     }
 }

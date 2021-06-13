@@ -7,6 +7,8 @@ use App\Repository\UserRepository;
 use App\Security\UserVoter;
 use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as Doc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +17,39 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends ApiController
 {
+    /**
+     * @Doc\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Page number",
+     *     @Doc\Schema(type="string")
+     * )
+     * @Doc\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="Number of users per page",
+     *     @Doc\Schema(type="string")
+     * )
+     * @Doc\Parameter(
+     *     name="sort",
+     *     in="query",
+     *     description="The field used to sort the users list (field name must be in camelCase)",
+     *     @Doc\Schema(type="string")
+     * )
+     * @Doc\Parameter(
+     *     name="direction",
+     *     in="query",
+     *     description="Direction (ASC or DESC) to sort the users list",
+     *     @Doc\Schema(type="string")
+     * )
+     * @Security(name="Bearer")
+     *
+     * @param Request           $request
+     * @param UserRepository    $repository
+     * @param PaginationService $pagination
+     *
+     * @return Response
+     */
     #[Route(
         '/users',
         name: 'users_list',
@@ -29,6 +64,12 @@ class UserController extends ApiController
 
     /**
      * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
+     *
+     * @Security(name="Bearer")
+     *
+     * @param User $user
+     *
+     * @return Response
      */
     #[Route(
         '/users/{id}',
@@ -45,6 +86,8 @@ class UserController extends ApiController
 
     /**
      * @ParamConverter(converter="createentity", "user", class="App\Entity\User")
+     *
+     * @Security(name="Bearer")
      *
      * @param User                   $user
      * @param EntityManagerInterface $entityManager
@@ -72,6 +115,13 @@ class UserController extends ApiController
 
     /**
      * @ParamConverter(converter="doctrine.orm", "user", class="App\Entity\User")
+     *
+     * @Security(name="Bearer")
+     *
+     * @param User                   $user
+     * @param EntityManagerInterface $entityManager
+     *
+     * @return Response
      */
     #[Route(
         '/users/{id}',

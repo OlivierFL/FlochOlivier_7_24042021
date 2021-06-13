@@ -107,6 +107,11 @@ In order to have a fully functional API, the fixtures contains :
 
 The documentation for the API is accessible at : `localhost:8000/api/doc`.
 
+
+## UML diagrams
+
+The UML diagrams are available in [`/doc/uml`](/doc/uml) directory at the root of the project.
+
 ## Third party libraries
 
 Packages and bundles used in this project :
